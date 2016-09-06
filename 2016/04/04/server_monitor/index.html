@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" >
+  <title>shell脚本定时监控日志报警 | 静宏的 blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="shell脚本定时监控日志报警最近遇到一个需求，需要监控服务器错误日志的情况，以便及时发现服务器异常，在网上找了一圈后发现了这一篇文章，shell脚本定时监控日志报警，经过修改后符合我们项目的要求，主要修改了获取日志文件列表的方式，使它支持多目录监控，使用时需要配置好 /etc/mail.rc 使之可发送邮件，再结合 Crontab 即可实现定时监控：原程序：monitor.sh
+12345678">
+<meta property="og:type" content="article">
+<meta property="og:title" content="shell脚本定时监控日志报警">
+<meta property="og:url" content="http://www.Acvrock.com/2016/04/04/server_monitor/index.html">
+<meta property="og:site_name" content="静宏的 blog">
+<meta property="og:description" content="shell脚本定时监控日志报警最近遇到一个需求，需要监控服务器错误日志的情况，以便及时发现服务器异常，在网上找了一圈后发现了这一篇文章，shell脚本定时监控日志报警，经过修改后符合我们项目的要求，主要修改了获取日志文件列表的方式，使它支持多目录监控，使用时需要配置好 /etc/mail.rc 使之可发送邮件，再结合 Crontab 即可实现定时监控：原程序：monitor.sh
+12345678">
+<meta property="og:updated_time" content="2016-04-09T06:26:26.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="shell脚本定时监控日志报警">
+<meta name="twitter:description" content="shell脚本定时监控日志报警最近遇到一个需求，需要监控服务器错误日志的情况，以便及时发现服务器异常，在网上找了一圈后发现了这一篇文章，shell脚本定时监控日志报警，经过修改后符合我们项目的要求，主要修改了获取日志文件列表的方式，使它支持多目录监控，使用时需要配置好 /etc/mail.rc 使之可发送邮件，再结合 Crontab 即可实现定时监控：原程序：monitor.sh
+12345678">
+  
+    <link rel="alternative" href="/atom.xml" title="静宏的 blog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="//favicon.png">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="/" class="profilepic">
+			
+			<img lazy-src="/https://avatars2.githubusercontent.com/u/4920598" class="js-avatar">
+			
+		</a>
+
+		<hgroup>
+		  <h1 class="header-author"><a href="/">静宏</a></h1>
+		</hgroup>
+
+		
+
+		
+			<div class="switch-btn">
+				<div class="icon">
+					<div class="icon-ctn">
+						<div class="icon-wrap icon-house" data-idx="0">
+							<div class="birdhouse"></div>
+							<div class="birdhouse_holes"></div>
+						</div>
+						<div class="icon-wrap icon-ribbon hide" data-idx="1">
+							<div class="ribbon"></div>
+						</div>
+						
+						
+						<div class="icon-wrap icon-me hide" data-idx="3">
+							<div class="user"></div>
+							<div class="shoulder"></div>
+						</div>
+						
+					</div>
+					
+				</div>
+				<div class="tips-box hide">
+					<div class="tips-arrow"></div>
+					<ul class="tips-inner">
+						<li>Menu</li>
+						<li>Tags</li>
+						
+						
+						<li>Über</li>
+						
+					</ul>
+				</div>
+			</div>
+		
+
+		<div class="switch-area">
+			<div class="switch-wrap">
+				<section class="switch-part switch-part1">
+					<nav class="header-menu">
+						<ul>
+						
+							<li><a href="/">主页</a></li>
+				        
+							<li><a href="/archives">所有文章</a></li>
+				        
+						</ul>
+					</nav>
+					<nav class="header-nav">
+						<div class="social">
+							
+								<a class="github" target="_blank" href="https://github.com/Acvrock" title="github">github</a>
+					        
+								<a class="weibo" target="_blank" href="http://weibo.com/jinghong1994/" title="weibo">weibo</a>
+					        
+						</div>
+					</nav>
+				</section>
+				
+				
+				<section class="switch-part switch-part2">
+					<div class="widget tagcloud" id="js-tagcloud">
+						<a href="/tags/Android/" style="font-size: 20px;">Android</a> <a href="/tags/Centos/" style="font-size: 10px;">Centos</a> <a href="/tags/Cronolog/" style="font-size: 10px;">Cronolog</a> <a href="/tags/Hexo/" style="font-size: 10px;">Hexo</a> <a href="/tags/JVM/" style="font-size: 10px;">JVM</a> <a href="/tags/Java/" style="font-size: 20px;">Java</a> <a href="/tags/Linux/" style="font-size: 20px;">Linux</a> <a href="/tags/Log/" style="font-size: 10px;">Log</a> <a href="/tags/Redis/" style="font-size: 10px;">Redis</a> <a href="/tags/Shell/" style="font-size: 10px;">Shell</a> <a href="/tags/Tomcat/" style="font-size: 10px;">Tomcat</a> <a href="/tags/checkbox-padding兼容/" style="font-size: 10px;">checkbox padding兼容</a> <a href="/tags/java-lang-ClassCastException/" style="font-size: 10px;">java.lang.ClassCastException</a> <a href="/tags/log4j2/" style="font-size: 10px;">log4j2</a> <a href="/tags/读书笔记/" style="font-size: 10px;">读书笔记</a> <a href="/tags/－-总结/" style="font-size: 20px;">－ 总结</a>
+					</div>
+				</section>
+				
+				
+				
+
+				
+				
+				<section class="switch-part switch-part3">
+				
+					<div id="js-aboutme">目前是 Java 开发者，做过一年 Android，正在学 iOS、Python</div>
+				</section>
+				
+			</div>
+		</div>
+	</header>				
+</div>
+
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"></div>
+  		<h1 class="header-author js-mobile-header hide">静宏</h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<div class="profilepic">
+				
+					<img lazy-src="/https://avatars2.githubusercontent.com/u/4920598" class="js-avatar">
+				
+			</div>
+			<hgroup>
+			  <h1 class="header-author">静宏</h1>
+			</hgroup>
+			
+			<nav class="header-menu">
+				<ul>
+				
+					<li><a href="/">主页</a></li>
+		        
+					<li><a href="/archives">所有文章</a></li>
+		        
+		        <div class="clearfix"></div>
+				</ul>
+			</nav>
+			<nav class="header-nav">
+				<div class="social">
+					
+						<a class="github" target="_blank" href="https://github.com/Acvrock" title="github">github</a>
+			        
+						<a class="weibo" target="_blank" href="http://weibo.com/jinghong1994/" title="weibo">weibo</a>
+			        
+				</div>
+			</nav>
+		</header>				
+	</div>
+</nav>
+
+      <div class="body-wrap"><article id="post-server_monitor" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/04/04/server_monitor/" class="article-date">
+  	<time datetime="2016-04-03T16:50:58.000Z" itemprop="datePublished">2016-04-04</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      shell脚本定时监控日志报警
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Linux/">Linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Shell/">Shell</a></li></ul>
+	</div>
+
+        
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="shell脚本定时监控日志报警"><a href="#shell脚本定时监控日志报警" class="headerlink" title="shell脚本定时监控日志报警"></a>shell脚本定时监控日志报警</h1><p>最近遇到一个需求，需要监控服务器错误日志的情况，以便及时发现服务器异常，在网上找了一圈后发现了这一篇文章，<a href="http://www.wiggins.top/wordpress/?p=277" target="_blank" rel="external">shell脚本定时监控日志报警</a><br>，经过修改后符合我们项目的要求，主要修改了获取日志文件列表的方式，使它支持多目录监控，使用时需要配置好 /etc/mail.rc 使之可发送邮件，再结合 Crontab 即可实现定时监控：<br>原程序：<a href="https://github.com/Acvrock/shell/blob/master/monitor.sh" target="_blank" rel="external">monitor.sh</a></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div></pre></td><td class="code"><pre><div class="line">#!/bin/bash</div><div class="line"></div><div class="line">#记录上一次的行数</div><div class="line">Last_num_d=/tmp/monitor/lastnum</div><div class="line">#日志目录</div><div class="line">Log_directory=/usr/local/nginx/logs</div><div class="line">#ERROR log 临时存放目录</div><div class="line">Error_log=/tmp/monitor/errorlog</div><div class="line"></div><div class="line">#目录判断</div><div class="line">d_judge()&#123;</div><div class="line"> [ ! -d $1 ] &amp;&amp; mkdir -p $1</div><div class="line">&#125;</div><div class="line"></div><div class="line">d_judge $Last_num_d</div><div class="line">d_judge $Error_log</div><div class="line"></div><div class="line"></div><div class="line">for logfile in `ls $Log_directory |grep log |grep -v access` ; do</div><div class="line">#for logfile in `ls $Log_directory` ; do</div><div class="line">    #先判断当前日志目录是否为空，为空则直接跳过</div><div class="line">    [ ! -s $Log_directory/$logfile ] &amp;&amp; echo &quot;`date` $logfile is empty&quot; &amp;&amp; continue</div><div class="line">    #判断记录上一次检查的行数的文件是否存在，不存在则给一个初始值</div><div class="line">    [ ! -f &quot;$Last_num_d/$logfile&quot; ] &amp;&amp; echo 1 &gt; $Last_num_d/$logfile</div><div class="line">    #将上一次值赋给变量</div><div class="line">    last_count=`cat $Last_num_d/$logfile`</div><div class="line">    #将当前的行数值赋给变量</div><div class="line">    current_count=`grep -Fc &quot;&quot; $Log_directory/$logfile`</div><div class="line">    #判断当前行数跟上一次行数是否相等，相等则退出当前循环</div><div class="line">    [ $last_count -eq $current_count ] &amp;&amp; echo &quot;`date` $logfile no change&quot; &amp;&amp; continue</div><div class="line">    #由于日志文件每天都会截断，因此会出现当前行数小于上一次行数的情况，此种情况出现则将上一次行数置1</div><div class="line">    [ $last_count -gt $current_count ] &amp;&amp; last_count=1</div><div class="line">    #截取上一次检查到的行数至当前行数的日志并检索出有ERROR的日志，并重定向到相应的ERROR日志文件</div><div class="line">    sed -n &quot;$last_count,$current_count p&quot; $Log_directory/$logfile | grep -i ERROR &gt;&gt; $Error_log/$logfile &amp;&amp; echo &quot;`date` $logfile error &quot; || echo &quot;`date` $logfile changed but no error&quot;</div><div class="line">    #判断ERROR日志是否存在且不为空，不为空则说明有错误日志，继而发送报警信息，报警完成后删除错误日志</div><div class="line">    [ -s $Error_log/$logfile ] &amp;&amp; echo -e &quot;$HOSTNAME \n `cat $Error_log/$logfile`&quot; | mail -s &quot;$logfile ERROR&quot; xxxxxxx@qq.com  &amp;&amp; rm -rf $Error_log/$logfile</div><div class="line">    #结束本次操作之后把当前的行号作为下一次检索的last number</div><div class="line">    echo $current_count &gt; $Last_num_d/$logfile</div><div class="line">done</div></pre></td></tr></table></figure>
+<p>修改后：<a href="https://github.com/Acvrock/shell/blob/master/monitor_md.sh" target="_blank" rel="external">monitor_md.sh</a></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div></pre></td><td class="code"><pre><div class="line">#!/bin/bash</div><div class="line"></div><div class="line">#记录上一次的行数</div><div class="line">Last_num_d=/tmp/monitor/lastnum</div><div class="line">#日志目录 可以是某目录如：Log_directory=/root/test，或者是多个目录，用空格隔开Log_directory=“/root/test /root/test1”</div><div class="line">Log_directorys=&quot;/mnt/harddrive/logs/app1/error /mnt/harddrive/logs/app2/error /mnt/harddrive/logs/app3/error&quot;</div><div class="line">#ERROR log 临时存放目录</div><div class="line">Error_log=/tmp/monitor/errorlog</div><div class="line"></div><div class="line">#目录判断</div><div class="line">d_judge()&#123;</div><div class="line">    [ ! -d $1 ] &amp;&amp; mkdir -p $1</div><div class="line">&#125;</div><div class="line"></div><div class="line">d_judge $Last_num_d</div><div class="line">d_judge $Error_log</div><div class="line">for Log_directory in  $Log_directorys ;do</div><div class="line">    # 所有日志log文件，除了带 access 的文件，此处的 awk 作用为查出全路径</div><div class="line">    for logfile in `ls -1 $Log_directory  |awk &apos;&#123;print i$0&#125;&apos; i=$Log_directory&apos;/&apos;  |grep log |grep -v access` ; do</div><div class="line">        #for logfile in `ls $Log_directory |grep log |grep -v access` ; do # 这是查出路径</div><div class="line">        #for logfile in `ls $Log_directory` ; do</div><div class="line">        # 文件名称不能带斜杠/,所以把文件名转换成不带斜杠的</div><div class="line">        logfilemarkfile=`echo $logfile |awk &apos;&#123;gsub(&quot;/&quot;,&quot;-&quot;) ; print $0&#125;&apos;`</div><div class="line">        #先判断当前日志目录是否为空，为空则直接跳过</div><div class="line">        [ ! -s $logfile ] &amp;&amp; echo &quot;`date` $logfile is empty&quot; &amp;&amp; continue</div><div class="line">        #判断记录上一次检查的行数的文件是否存在，不存在则给一个初始值</div><div class="line">        [ ! -f &quot;$Last_num_d/$logfilemarkfile&quot; ] &amp;&amp; echo 1 &gt; $Last_num_d/$logfilemarkfile</div><div class="line">        #将上一次值赋给变量</div><div class="line">        last_count=`cat $Last_num_d/$logfilemarkfile`</div><div class="line">        #将当前的行数值赋给变量</div><div class="line">        current_count=`grep -Fc &quot;&quot; $logfile`</div><div class="line">        #判断当前行数跟上一次行数是否相等，相等则退出当前循环</div><div class="line">        [ $last_count -eq $current_count ] &amp;&amp; echo &quot;`date` $logfile no change&quot; &amp;&amp; continue</div><div class="line">        #由于日志文件每天都会截断，因此会出现当前行数小于上一次行数的情况，此种情况出现则将上一次行数置1</div><div class="line">        [ $last_count -gt $current_count ] &amp;&amp; last_count=1</div><div class="line">        #截取上一次检查到的行数至当前行数的日志并检索出有ERROR的日志，并重定向到相应的ERROR日志文件</div><div class="line">        sed -n &quot;$last_count,$current_count p&quot; $logfile | grep -i ERROR &gt;&gt; $Error_log/$logfilemarkfile &amp;&amp; echo &quot;`date` $logfile error &quot; || echo &quot;`date` $logfile changed but no error&quot;</div><div class="line">        #判断ERROR日志是否存在且不为空，不为空则说明有错误日志，继而发送报警信息，报警完成后删除错误日志</div><div class="line">        [ -s $Error_log/$logfilemarkfile ] &amp;&amp; echo -e &quot;$HOSTNAME \n `cat $Error_log/$logfilemarkfile`&quot; | mail -s &quot;$logfile ERROR&quot; xxxxxxx@qq.com  &amp;&amp; rm -rf $Error_log/$logfilemarkfile</div><div class="line">        #结束本次操作之后把当前的行号作为下一次检索的last number</div><div class="line">        echo $current_count &gt; $Last_num_d/$logfilemarkfile</div><div class="line">    done</div><div class="line">done</div></pre></td></tr></table></figure>
+
+      
+    </div>
+    
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2016/04/04/log4j2_conf/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption"><</strong>
+      <div class="article-nav-title">
+        
+          log4j2 日志配置
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2016/02/01/20150201_2015-2016/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">静宏的 2015 -&gt; 2016</div>
+      <strong class="article-nav-caption">></strong>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+
+
+
+
+
+
+</div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+    	<div class="footer-left">
+    		&copy; 2016 静宏
+    	</div>
+      	<div class="footer-right">
+      		<a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia</a> by Litten
+      	</div>
+    </div>
+  </div>
+</footer>
+    </div>
+    
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+
+<script>
+	var yiliaConfig = {
+		fancybox: true,
+		mathjax: true,
+		animate: true,
+		isHome: false,
+		isPost: true,
+		isArchive: false,
+		isTag: false,
+		isCategory: false,
+		open_in_new: false,
+		root: /
+	}
+</script>
+<script src="http://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+<script src="/js/main.js"></script>
+
+
+
+
+
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';                 
+    }       
+});
+</script>
+
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+  </div>
+</body>
+</html>
