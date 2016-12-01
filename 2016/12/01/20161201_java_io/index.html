@@ -4,17 +4,30 @@
   <meta charset="utf-8">
   
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
-  <title>Tag: JVM | 静宏的 blog</title>
+  <title>Java IO 编码解码 | 静宏的 blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="纪录、分享、回顾">
-<meta property="og:type" content="website">
-<meta property="og:title" content="静宏的 blog">
-<meta property="og:url" content="http://www.Acvrock.com/tags/JVM/index.html">
+  <meta name="description" content="字符串的编码／解码问题charset    
+多字节数据（short/int/long/double/float）的编码／解码问题ObjectOutputStream  （默认 Big-Endian 顺序）   
+Object 对象编码／解码问题Java Serialize 机制（二进制）以及 java.beans 包里面的 XMLEncoder (文本编码)
+
+###Java Object 序">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java IO 编码解码">
+<meta property="og:url" content="http://www.Acvrock.com/2016/12/01/20161201_java_io/index.html">
 <meta property="og:site_name" content="静宏的 blog">
-<meta property="og:description" content="纪录、分享、回顾">
+<meta property="og:description" content="字符串的编码／解码问题charset    
+多字节数据（short/int/long/double/float）的编码／解码问题ObjectOutputStream  （默认 Big-Endian 顺序）   
+Object 对象编码／解码问题Java Serialize 机制（二进制）以及 java.beans 包里面的 XMLEncoder (文本编码)
+
+###Java Object 序">
+<meta property="og:updated_time" content="2016-12-01T14:08:42.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="静宏的 blog">
-<meta name="twitter:description" content="纪录、分享、回顾">
+<meta name="twitter:title" content="Java IO 编码解码">
+<meta name="twitter:description" content="字符串的编码／解码问题charset    
+多字节数据（short/int/long/double/float）的编码／解码问题ObjectOutputStream  （默认 Big-Endian 顺序）   
+Object 对象编码／解码问题Java Serialize 机制（二进制）以及 java.beans 包里面的 XMLEncoder (文本编码)
+
+###Java Object 序">
   
     <link rel="alternative" href="/atom.xml" title="静宏的 blog" type="application/atom+xml">
   
@@ -124,54 +137,96 @@
 </nav>
 
       <div class="body-wrap">
+        <article id="post-20161201_java_io" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
         
   
-  
-    
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2016" class="archive-year">2016</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2016/06/10/jvm_gc_opt/" class="archive-article-date">
-  	<time datetime="2016-06-10T09:31:24.000Z" itemprop="datePublished"><i class="icon-clock"></i>2016-06-10</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2016/06/10/jvm_gc_opt/">HotSpot VM 相关参数</a>
+    <h1 class="article-title" itemprop="name">
+      Java IO 编码解码
     </h1>
   
 
-        <div class="article-info info-on-right">
-          
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <ul>
+<li>字符串的编码／解码问题<br>charset    </li>
+<li>多字节数据（short/int/long/double/float）的编码／解码问题<br>ObjectOutputStream  （默认 Big-Endian 顺序）   </li>
+<li>Object 对象编码／解码问题<br>Java Serialize 机制（二进制）以及 java.beans 包里面的 XMLEncoder (文本编码)</li>
+</ul>
+<p>###Java Object 序列化机制</p>
+<ul>
+<li>当父类实现了序列化，子类也自动实现了序列化，不需要显式实现 Serializable 接口   </li>
+<li>反过来一个子类实现了 Serializable 接口，希望父类对象序列化，需要父类也实现Serializable 接口，否则父类对象的成员变量不参与序列化   </li>
+<li>当一个对象的实例变量引用其他对象，序列化该对象时，也会把引用对象也进行序列化   </li>
+<li>某些对象不能序列化，如：安全问题不能远程传输的对象、无法重新还原的对象（socket、thread、Stream）</li>
+</ul>
+<p> MappedByteBuffer   </p>
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      <a href="/2016/12/01/20161201_java_io/" class="archive-article-date">
+  	<time datetime="2016-12-01T14:08:30.000Z" itemprop="datePublished"><i class="icon-clock"></i>2016-12-01</time>
+</a>
+      
 	<div class="article-tag tagcloud">
 		<i class="icon-price-tags"></i>
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/JVM/">JVM</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Java/">Java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/读书笔记/">读书笔记</a></li></ul>
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/读书笔记/">读书笔记</a></li></ul>
 	</div>
 
-          
+      
 
-        </div>
-        <div class="clearfix"></div>
-    </header>
+      <div class="clearfix"></div>
+    </div>
   </div>
 </article>
-  
-  
-    </div></section>
-  
 
-    
+  
+<nav id="article-nav">
+  
+  
+    <a href="/2016/11/26/the_pragmatic_programmer/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">程序员修炼之道</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+
+
+<div class="share_jia">
+	<!-- JiaThis Button BEGIN -->
+	<div class="jiathis_style">
+		<span class="jiathis_txt">Share to: &nbsp; </span>
+		<a class="jiathis_button_facebook"></a> 
+	    <a class="jiathis_button_twitter"></a>
+	    <a class="jiathis_button_plus"></a> 
+	    <a class="jiathis_button_tsina"></a>
+		<a class="jiathis_button_cqq"></a>
+		<a class="jiathis_button_douban"></a>
+		<a class="jiathis_button_weixin"></a>
+		<a class="jiathis_button_tumblr"></a>
+    <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
+	</div>
+	<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=1405949716054953" charset="utf-8"></script>
+	<!-- JiaThis Button END -->
+</div>
+
+
+
+
+
+
+
 
 
       </div>
@@ -194,9 +249,9 @@
 		mathjax: true,
 		animate: true,
 		isHome: false,
-		isPost: false,
+		isPost: true,
 		isArchive: false,
-		isTag: true,
+		isTag: false,
 		isCategory: false,
 		open_in_new: false
 	}
