@@ -6,28 +6,28 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <title>Java IO 编码解码 | 静宏的 blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="字符串的编码／解码问题charset    
-多字节数据（short/int/long/double/float）的编码／解码问题ObjectOutputStream  （默认 Big-Endian 顺序）   
-Object 对象编码／解码问题Java Serialize 机制（二进制）以及 java.beans 包里面的 XMLEncoder (文本编码)
+  <meta name="description" content="字符串的编码/解码问题charset    
+多字节数据（short/int/long/double/float）的编码/解码问题ObjectOutputStream  （默认 Big-Endian 顺序）   
+Object 对象编码/解码问题Java Serialize 机制（二进制）以及 java.beans 包里面的 XMLEncoder (文本编码)
 
-###Java Object 序">
+Java Object 序列化机">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Java IO 编码解码">
 <meta property="og:url" content="http://www.Acvrock.com/2016/12/01/20161201_java_io/index.html">
 <meta property="og:site_name" content="静宏的 blog">
-<meta property="og:description" content="字符串的编码／解码问题charset    
-多字节数据（short/int/long/double/float）的编码／解码问题ObjectOutputStream  （默认 Big-Endian 顺序）   
-Object 对象编码／解码问题Java Serialize 机制（二进制）以及 java.beans 包里面的 XMLEncoder (文本编码)
+<meta property="og:description" content="字符串的编码/解码问题charset    
+多字节数据（short/int/long/double/float）的编码/解码问题ObjectOutputStream  （默认 Big-Endian 顺序）   
+Object 对象编码/解码问题Java Serialize 机制（二进制）以及 java.beans 包里面的 XMLEncoder (文本编码)
 
-###Java Object 序">
-<meta property="og:updated_time" content="2016-12-01T14:08:42.000Z">
+Java Object 序列化机">
+<meta property="og:updated_time" content="2016-12-02T15:30:01.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Java IO 编码解码">
-<meta name="twitter:description" content="字符串的编码／解码问题charset    
-多字节数据（short/int/long/double/float）的编码／解码问题ObjectOutputStream  （默认 Big-Endian 顺序）   
-Object 对象编码／解码问题Java Serialize 机制（二进制）以及 java.beans 包里面的 XMLEncoder (文本编码)
+<meta name="twitter:description" content="字符串的编码/解码问题charset    
+多字节数据（short/int/long/double/float）的编码/解码问题ObjectOutputStream  （默认 Big-Endian 顺序）   
+Object 对象编码/解码问题Java Serialize 机制（二进制）以及 java.beans 包里面的 XMLEncoder (文本编码)
 
-###Java Object 序">
+Java Object 序列化机">
   
     <link rel="alternative" href="/atom.xml" title="静宏的 blog" type="application/atom+xml">
   
@@ -156,12 +156,11 @@ Object 对象编码／解码问题Java Serialize 机制（二进制）以及 jav
     <div class="article-entry" itemprop="articleBody">
       
         <ul>
-<li>字符串的编码／解码问题<br>charset    </li>
-<li>多字节数据（short/int/long/double/float）的编码／解码问题<br>ObjectOutputStream  （默认 Big-Endian 顺序）   </li>
-<li>Object 对象编码／解码问题<br>Java Serialize 机制（二进制）以及 java.beans 包里面的 XMLEncoder (文本编码)</li>
+<li>字符串的编码/解码问题<br>charset    </li>
+<li>多字节数据（short/int/long/double/float）的编码/解码问题<br>ObjectOutputStream  （默认 Big-Endian 顺序）   </li>
+<li>Object 对象编码/解码问题<br>Java Serialize 机制（二进制）以及 java.beans 包里面的 XMLEncoder (文本编码)</li>
 </ul>
-<p>###Java Object 序列化机制</p>
-<ul>
+<h3 id="Java-Object-序列化机制"><a href="#Java-Object-序列化机制" class="headerlink" title="Java Object 序列化机制"></a>Java Object 序列化机制</h3><ul>
 <li>当父类实现了序列化，子类也自动实现了序列化，不需要显式实现 Serializable 接口   </li>
 <li>反过来一个子类实现了 Serializable 接口，希望父类对象序列化，需要父类也实现Serializable 接口，否则父类对象的成员变量不参与序列化   </li>
 <li>当一个对象的实例变量引用其他对象，序列化该对象时，也会把引用对象也进行序列化   </li>
@@ -191,6 +190,15 @@ Object 对象编码／解码问题Java Serialize 机制（二进制）以及 jav
 
   
 <nav id="article-nav">
+  
+    <a href="/2016/12/02/20161202_java_ collections/" id="article-nav-newer" class="article-nav-link-wrap">
+      <i class="icon-circle-left"></i>
+      <div class="article-nav-title">
+        
+          Java 集合框架
+        
+      </div>
+    </a>
   
   
     <a href="/2016/11/26/the_pragmatic_programmer/" id="article-nav-older" class="article-nav-link-wrap">
@@ -307,7 +315,7 @@ MathJax.Hub.Queue(function() {
     
     	<section class="tools-section tools-section-tag">
     			<div class="widget tagcloud" id="js-tagcloud">
-    				<a href="/tags/Android/" style="font-size: 15px;">Android</a> <a href="/tags/Centos/" style="font-size: 10px;">Centos</a> <a href="/tags/Cronolog/" style="font-size: 10px;">Cronolog</a> <a href="/tags/Error/" style="font-size: 10px;">Error</a> <a href="/tags/Exception/" style="font-size: 10px;">Exception</a> <a href="/tags/Hexo/" style="font-size: 10px;">Hexo</a> <a href="/tags/JVM/" style="font-size: 10px;">JVM</a> <a href="/tags/Java/" style="font-size: 20px;">Java</a> <a href="/tags/Linux/" style="font-size: 15px;">Linux</a> <a href="/tags/Log/" style="font-size: 10px;">Log</a> <a href="/tags/Redis/" style="font-size: 10px;">Redis</a> <a href="/tags/Shell/" style="font-size: 10px;">Shell</a> <a href="/tags/Spring/" style="font-size: 10px;">Spring</a> <a href="/tags/Tomcat/" style="font-size: 10px;">Tomcat</a> <a href="/tags/checkbox-padding兼容/" style="font-size: 10px;">checkbox padding兼容</a> <a href="/tags/log4j2/" style="font-size: 10px;">log4j2</a> <a href="/tags/读书笔记/" style="font-size: 20px;">读书笔记</a> <a href="/tags/－-总结/" style="font-size: 15px;">－ 总结</a>
+    				<a href="/tags/Android/" style="font-size: 13.33px;">Android</a> <a href="/tags/Centos/" style="font-size: 10px;">Centos</a> <a href="/tags/Cronolog/" style="font-size: 10px;">Cronolog</a> <a href="/tags/Error/" style="font-size: 10px;">Error</a> <a href="/tags/Exception/" style="font-size: 10px;">Exception</a> <a href="/tags/Hexo/" style="font-size: 10px;">Hexo</a> <a href="/tags/JVM/" style="font-size: 10px;">JVM</a> <a href="/tags/Java/" style="font-size: 16.67px;">Java</a> <a href="/tags/Linux/" style="font-size: 13.33px;">Linux</a> <a href="/tags/Log/" style="font-size: 10px;">Log</a> <a href="/tags/Redis/" style="font-size: 10px;">Redis</a> <a href="/tags/Shell/" style="font-size: 10px;">Shell</a> <a href="/tags/Spring/" style="font-size: 10px;">Spring</a> <a href="/tags/Tomcat/" style="font-size: 10px;">Tomcat</a> <a href="/tags/checkbox-padding兼容/" style="font-size: 10px;">checkbox padding兼容</a> <a href="/tags/log4j2/" style="font-size: 10px;">log4j2</a> <a href="/tags/读书笔记/" style="font-size: 20px;">读书笔记</a> <a href="/tags/－-总结/" style="font-size: 13.33px;">－ 总结</a>
     			</div>
     	</section>
     

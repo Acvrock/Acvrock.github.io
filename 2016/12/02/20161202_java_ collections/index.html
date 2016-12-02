@@ -4,17 +4,33 @@
   <meta charset="utf-8">
   
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
-  <title>Archives: 2015 | 静宏的 blog</title>
+  <title>Java 集合框架 | 静宏的 blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="纪录、分享、回顾">
-<meta property="og:type" content="website">
-<meta property="og:title" content="静宏的 blog">
-<meta property="og:url" content="http://www.Acvrock.com/archives/2015/index.html">
+  <meta name="description" content="Apache Common Collections   
+Google Guava   
+Java Collections Framework
+
+Collection可遍历的、可伸缩的、可查询的，而可排序不是集合的要求Iterator 设计模式解决无限的数据-&amp;gt; 有限的内存这个矛盾   
+PriorityQueue 优先队列，使用二叉堆实现,二叉堆又是用数组表示BlockingQueue">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java 集合框架">
+<meta property="og:url" content="http://www.Acvrock.com/2016/12/02/20161202_java_ collections/index.html">
 <meta property="og:site_name" content="静宏的 blog">
-<meta property="og:description" content="纪录、分享、回顾">
+<meta property="og:description" content="Apache Common Collections   
+Google Guava   
+Java Collections Framework
+
+Collection可遍历的、可伸缩的、可查询的，而可排序不是集合的要求Iterator 设计模式解决无限的数据-&amp;gt; 有限的内存这个矛盾   
+PriorityQueue 优先队列，使用二叉堆实现,二叉堆又是用数组表示BlockingQueue">
+<meta property="og:updated_time" content="2016-12-02T15:30:11.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="静宏的 blog">
-<meta name="twitter:description" content="纪录、分享、回顾">
+<meta name="twitter:title" content="Java 集合框架">
+<meta name="twitter:description" content="Apache Common Collections   
+Google Guava   
+Java Collections Framework
+
+Collection可遍历的、可伸缩的、可查询的，而可排序不是集合的要求Iterator 设计模式解决无限的数据-&amp;gt; 有限的内存这个矛盾   
+PriorityQueue 优先队列，使用二叉堆实现,二叉堆又是用数组表示BlockingQueue">
   
     <link rel="alternative" href="/atom.xml" title="静宏的 blog" type="application/atom+xml">
   
@@ -124,150 +140,107 @@
 </nav>
 
       <div class="body-wrap">
+        <article id="post-20161202_java_ collections" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
         
   
+    <h1 class="article-title" itemprop="name">
+      Java 集合框架
+    </h1>
   
+
+      </header>
     
-    
+    <div class="article-entry" itemprop="articleBody">
       
+        <ul>
+<li>Apache Common Collections   </li>
+<li>Google Guava   </li>
+<li>Java Collections Framework</li>
+</ul>
+<p>Collection<br>可遍历的、可伸缩的、可查询的，而可排序不是集合的要求<br>Iterator 设计模式解决无限的数据-&gt; 有限的内存这个矛盾   </p>
+<p>PriorityQueue 优先队列，使用二叉堆实现,二叉堆又是用数组表示<br>BlockingQueue 堵塞队列，用于生产者消费者模式<br>HashMap 内部为一个 Tree 实现<br>如果以插入+查找最小+删除最小来比较红黑树和最小堆时，红黑树占优<br>JDK 8 中，HashMap Hash 冲突时，使用红黑树代替链表</p>
+<p>java.lang.ref.SoftReference     软引用<br>java.lang.ref.WeakReference     弱引用<br>java.lang.ref.PhantomReference  虚引用<br>WeakHashMap<br>SkipList 跳表   ConcurrentSkipListMap  空间换时间<br>树为了排序   </p>
+<h2 id="实践"><a href="#实践" class="headerlink" title="实践"></a>实践</h2><ul>
+<li>定义时使用接口</li>
+<li>底层返回集合为空时，返回长度为 0 的集合或者数组，不要返回 null</li>
+<li>谨慎对待 hashCode 和 equals</li>
+<li>用 Arrays 和 Collections 处理：排序、查找、集合类型转换、集合计算操作   </li>
+<li>如果元素长度固定，优先考虑 Array     </li>
+<li>使用泛型   </li>
+<li>遍历 List 时，考虑使用 ListIterator    </li>
+<li>频繁查找某个元素时，考虑进行排序   </li>
+<li>需要元素有序时，考虑使用 Linked 家族    </li>
+<li>使用 WeakHashMap 维护短暂使用的数据   </li>
+<li>多线程环境下优先使用 concurrent 家族   </li>
+<li>多线程环境下频繁遍历少量修改，考虑 CopyOnWriteArrayList   </li>
+<li>多线程环境下不要强一致性的遍历器，可考虑使用 ConcurrentHashahMap   </li>
+<li>多线程环境下使用 TreeMap ，考虑 ConcurrentSkipListSet 和 ConcurrentSkipListMap   </li>
+</ul>
+
       
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2015" class="archive-year">2015</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2015/01/23/20150123_DeBug1/" class="archive-article-date">
-  	<time datetime="2015-01-23T12:56:01.000Z" itemprop="datePublished"><i class="icon-clock"></i>2015-01-23</time>
+    </div>
+    <div class="article-info article-info-index">
+      
+      <a href="/2016/12/02/20161202_java_ collections/" class="archive-article-date">
+  	<time datetime="2016-12-02T15:04:30.000Z" itemprop="datePublished"><i class="icon-clock"></i>2016-12-02</time>
 </a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2015/01/23/20150123_DeBug1/">编程记录2</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
+      
 	<div class="article-tag tagcloud">
 		<i class="icon-price-tags"></i>
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Android/">Android</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/checkbox-padding兼容/">checkbox padding兼容</a></li></ul>
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/读书笔记/">读书笔记</a></li></ul>
 	</div>
 
-          
+      
 
-        </div>
-        <div class="clearfix"></div>
-    </header>
+      <div class="clearfix"></div>
+    </div>
   </div>
 </article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2015/01/23/20150123_DeBug0/" class="archive-article-date">
-  	<time datetime="2015-01-23T12:13:07.000Z" itemprop="datePublished"><i class="icon-clock"></i>2015-01-23</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2015/01/23/20150123_DeBug0/">编程记录1</a>
-    </h1>
-  
 
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags"></i>
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Android/">Android</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Exception/">Exception</a></li></ul>
+  
+<nav id="article-nav">
+  
+  
+    <a href="/2016/12/01/20161201_java_io/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">Java IO 编码解码</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+
+
+<div class="share_jia">
+	<!-- JiaThis Button BEGIN -->
+	<div class="jiathis_style">
+		<span class="jiathis_txt">Share to: &nbsp; </span>
+		<a class="jiathis_button_facebook"></a> 
+	    <a class="jiathis_button_twitter"></a>
+	    <a class="jiathis_button_plus"></a> 
+	    <a class="jiathis_button_tsina"></a>
+		<a class="jiathis_button_cqq"></a>
+		<a class="jiathis_button_douban"></a>
+		<a class="jiathis_button_weixin"></a>
+		<a class="jiathis_button_tumblr"></a>
+    <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
 	</div>
+	<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=1405949716054953" charset="utf-8"></script>
+	<!-- JiaThis Button END -->
+</div>
 
-          
 
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2015/01/20/My-New-Page/" class="archive-article-date">
-  	<time datetime="2015-01-20T03:21:08.000Z" itemprop="datePublished"><i class="icon-clock"></i>2015-01-20</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2015/01/20/My-New-Page/">My New Page</a>
-    </h1>
-  
 
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags"></i>
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Hexo/">Hexo</a></li></ul>
-	</div>
 
-          
 
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2015/01/16/hello-world/" class="archive-article-date">
-  	<time datetime="2015-01-16T10:57:33.000Z" itemprop="datePublished"><i class="icon-clock"></i>2015-01-16</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2015/01/16/hello-world/">静宏的 2014 -&gt; 2015</a>
-    </h1>
-  
 
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags"></i>
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/－-总结/">－ 总结</a></li></ul>
-	</div>
 
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-  
-    </div></section>
-  
-
-    
 
 
       </div>
@@ -290,8 +263,8 @@
 		mathjax: true,
 		animate: true,
 		isHome: false,
-		isPost: false,
-		isArchive: true,
+		isPost: true,
+		isArchive: false,
 		isTag: false,
 		isCategory: false,
 		open_in_new: false
