@@ -4,17 +4,18 @@
   <meta charset="utf-8">
   
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
-  <title>Archives: 2016/12 | 静宏的 blog</title>
+  <title>Java 中 数值类型的二进制表示 | 静宏的 blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="纪录、分享、回顾">
-<meta property="og:type" content="website">
-<meta property="og:title" content="静宏的 blog">
-<meta property="og:url" content="http://www.Acvrock.com/archives/2016/12/index.html">
+  <meta name="description" content="Java 中 数值类型的表示，byte 占用 8 个 bit ，每个 bit 只有 0 和 1 两个值，byte 的值在 bit 中表示就是二进制，所以值为 4 的 byte ，在计算机中表示为二进制的原码：00000100,如果是负数，则表示为负数正值的补码，如： -4 表示为：11111100，可以看出，如果首位为 1 时，表示负数，首位为 0 时，表示正数。所以 byte 的最大值和最小值分">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java 中 数值类型的二进制表示">
+<meta property="og:url" content="http://www.Acvrock.com/2016/12/10/java_byte/index.html">
 <meta property="og:site_name" content="静宏的 blog">
-<meta property="og:description" content="纪录、分享、回顾">
+<meta property="og:description" content="Java 中 数值类型的表示，byte 占用 8 个 bit ，每个 bit 只有 0 和 1 两个值，byte 的值在 bit 中表示就是二进制，所以值为 4 的 byte ，在计算机中表示为二进制的原码：00000100,如果是负数，则表示为负数正值的补码，如： -4 表示为：11111100，可以看出，如果首位为 1 时，表示负数，首位为 0 时，表示正数。所以 byte 的最大值和最小值分">
+<meta property="og:updated_time" content="2016-12-10T13:44:25.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="静宏的 blog">
-<meta name="twitter:description" content="纪录、分享、回顾">
+<meta name="twitter:title" content="Java 中 数值类型的二进制表示">
+<meta name="twitter:description" content="Java 中 数值类型的表示，byte 占用 8 个 bit ，每个 bit 只有 0 和 1 两个值，byte 的值在 bit 中表示就是二进制，所以值为 4 的 byte ，在计算机中表示为二进制的原码：00000100,如果是负数，则表示为负数正值的补码，如： -4 表示为：11111100，可以看出，如果首位为 1 时，表示负数，首位为 0 时，表示正数。所以 byte 的最大值和最小值分">
   
     <link rel="alternative" href="/atom.xml" title="静宏的 blog" type="application/atom+xml">
   
@@ -124,118 +125,87 @@
 </nav>
 
       <div class="body-wrap">
+        <article id="post-java_byte" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
         
   
+    <h1 class="article-title" itemprop="name">
+      Java 中 数值类型的二进制表示
+    </h1>
   
+
+      </header>
     
-    
+    <div class="article-entry" itemprop="articleBody">
       
+        <p>Java 中 数值类型的表示，byte 占用 8 个 bit ，每个 bit 只有 0 和 1 两个值，byte 的值在 bit 中表示就是二进制，所以值为 4 的 byte ，在计算机中表示为二进制的原码：<br>00000100,如果是负数，则表示为负数正值的补码，如： -4 表示为：11111100，可以看出，如果首位为 1 时，表示负数，首位为 0 时，表示正数。所以 byte 的最大值和最小值分别是 127 、-127   </p>
+<ul>
+<li>负数的二进制位表示过程如下：<br>-4 取正值：<code>4</code><br>正值转换为原码  <code>00000100</code><br>原码取反为反码  <code>11111011</code><br>反码+1变成补码   <code>11111100</code>   </li>
+</ul>
+
       
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2016" class="archive-year">2016</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2016/12/10/java_byte/" class="archive-article-date">
+    </div>
+    <div class="article-info article-info-index">
+      
+      <a href="/2016/12/10/java_byte/" class="archive-article-date">
   	<time datetime="2016-12-10T13:44:10.000Z" itemprop="datePublished"><i class="icon-clock"></i>2016-12-10</time>
 </a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2016/12/10/java_byte/">Java 中 数值类型的二进制表示</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
+      
 	<div class="article-tag tagcloud">
 		<i class="icon-price-tags"></i>
 		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/读书笔记/">读书笔记</a></li></ul>
 	</div>
 
-          
+      
 
-        </div>
-        <div class="clearfix"></div>
-    </header>
+      <div class="clearfix"></div>
+    </div>
   </div>
 </article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2016/12/02/20161202_java_ collections/" class="archive-article-date">
-  	<time datetime="2016-12-02T15:04:30.000Z" itemprop="datePublished"><i class="icon-clock"></i>2016-12-02</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2016/12/02/20161202_java_ collections/">Java 集合框架</a>
-    </h1>
-  
 
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags"></i>
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/读书笔记/">读书笔记</a></li></ul>
+  
+<nav id="article-nav">
+  
+  
+    <a href="/2016/12/02/20161202_java_ collections/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">Java 集合框架</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+
+
+<div class="share_jia">
+	<!-- JiaThis Button BEGIN -->
+	<div class="jiathis_style">
+		<span class="jiathis_txt">Share to: &nbsp; </span>
+		<a class="jiathis_button_facebook"></a> 
+	    <a class="jiathis_button_twitter"></a>
+	    <a class="jiathis_button_plus"></a> 
+	    <a class="jiathis_button_tsina"></a>
+		<a class="jiathis_button_cqq"></a>
+		<a class="jiathis_button_douban"></a>
+		<a class="jiathis_button_weixin"></a>
+		<a class="jiathis_button_tumblr"></a>
+    <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
 	</div>
+	<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=1405949716054953" charset="utf-8"></script>
+	<!-- JiaThis Button END -->
+</div>
 
-          
 
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2016/12/01/20161201_java_io/" class="archive-article-date">
-  	<time datetime="2016-12-01T14:08:30.000Z" itemprop="datePublished"><i class="icon-clock"></i>2016-12-01</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2016/12/01/20161201_java_io/">Java IO 编码解码</a>
-    </h1>
-  
 
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags"></i>
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/读书笔记/">读书笔记</a></li></ul>
-	</div>
 
-          
 
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-  
-    </div></section>
-  
 
-    
+
 
 
       </div>
@@ -258,8 +228,8 @@
 		mathjax: true,
 		animate: true,
 		isHome: false,
-		isPost: false,
-		isArchive: true,
+		isPost: true,
+		isArchive: false,
 		isTag: false,
 		isCategory: false,
 		open_in_new: false
