@@ -166,7 +166,21 @@
 <li>equals 方法认为 0.1 和 0.1 是相等的，但是 0.10 和 0.1 是不等的。方法 compareTo 认为 0.1 和 0.1 相等， 0.10 和 0.1 是相等的，所以比较 BigDecimal 时，使用 compareTo()   </li>
 <li>有时候运算无法得到精确结果，产生无限循环小数，可以显式地控制舍入  </li>
 </ol>
-<p>Java 数组是特殊的对象   </p>
+<p>Java 数组是特殊的对象<br> 如何让对象数组缓存友好？</p>
+<ul>
+<li>程序启动是预先生成数组中引用的对象，增加缓存友好的概率<br>For(…){<br>a[i] = new ObjectXX()<br>}</li>
+<li>unsafe 控制 Java 对象内存位置   </li>
+<li>不使用对象   </li>
+</ul>
+<p>java.util.Arrays 提供了 Java 数组排序方法，基本类型使用 DualPivotQuickSort 算法<br>，Java 对象排序使用 TimSort 算法(JDK7),MergeSort（JDK6）</p>
+<p>Java 数组高级技巧   </p>
+<ul>
+<li>初始化数组: Arrays.setAll(array,generator);</li>
+<li>高效复制数组: int[] arr = Arrays.copyof(源数组,新数组长度);</li>
+<li>高效排序: Arrays.sort、并行排序 Arrays.parallelSort    </li>
+<li>高效查询: Arrays.binarySearch   </li>
+<li>输出内容为字符串: Arrays.toString(array)  </li>
+</ul>
 
       
     </div>
