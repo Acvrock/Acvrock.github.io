@@ -6,19 +6,25 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <title>用 Cronolog 切割 Tomcat 的 catalina.out 日志 | 静宏的 blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="用 Cronolog 切割 Tomcat 的 catalina.out 日志Cronolog 是一个小巧高效的日志文件处理工具，可以实现自动的按规则生成周期性的日志文件安装 cronolog 命令如下：
-123456wget ftp://de.aminet.net/macports/distfiles/cronolog-devel/cronolog-1.7.0-beta.tar.gztar zxv">
+  <meta name="description" content="用 Cronolog 切割 Tomcat 的 catalina.out 日志
+Cronolog 是一个小巧高效的日志文件处理工具，可以实现自动的按规则生成周期性的日志文件
+安装 cronolog 命令如下：
+123456wget ftp://de.aminet.net/macports/distfiles/cronolog-devel/cronolog-1.7.0-beta.tar.gztar z">
 <meta property="og:type" content="article">
 <meta property="og:title" content="用 Cronolog 切割 Tomcat 的 catalina.out 日志">
 <meta property="og:url" content="http://www.Acvrock.com/2016/04/07/cronolog/index.html">
 <meta property="og:site_name" content="静宏的 blog">
-<meta property="og:description" content="用 Cronolog 切割 Tomcat 的 catalina.out 日志Cronolog 是一个小巧高效的日志文件处理工具，可以实现自动的按规则生成周期性的日志文件安装 cronolog 命令如下：
-123456wget ftp://de.aminet.net/macports/distfiles/cronolog-devel/cronolog-1.7.0-beta.tar.gztar zxv">
+<meta property="og:description" content="用 Cronolog 切割 Tomcat 的 catalina.out 日志
+Cronolog 是一个小巧高效的日志文件处理工具，可以实现自动的按规则生成周期性的日志文件
+安装 cronolog 命令如下：
+123456wget ftp://de.aminet.net/macports/distfiles/cronolog-devel/cronolog-1.7.0-beta.tar.gztar z">
 <meta property="og:updated_time" content="2016-04-07T14:46:21.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="用 Cronolog 切割 Tomcat 的 catalina.out 日志">
-<meta name="twitter:description" content="用 Cronolog 切割 Tomcat 的 catalina.out 日志Cronolog 是一个小巧高效的日志文件处理工具，可以实现自动的按规则生成周期性的日志文件安装 cronolog 命令如下：
-123456wget ftp://de.aminet.net/macports/distfiles/cronolog-devel/cronolog-1.7.0-beta.tar.gztar zxv">
+<meta name="twitter:description" content="用 Cronolog 切割 Tomcat 的 catalina.out 日志
+Cronolog 是一个小巧高效的日志文件处理工具，可以实现自动的按规则生成周期性的日志文件
+安装 cronolog 命令如下：
+123456wget ftp://de.aminet.net/macports/distfiles/cronolog-devel/cronolog-1.7.0-beta.tar.gztar z">
   
     <link rel="alternative" href="/atom.xml" title="静宏的 blog" type="application/atom+xml">
   
@@ -146,16 +152,19 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h1 id="用-Cronolog-切割-Tomcat-的-catalina-out-日志"><a href="#用-Cronolog-切割-Tomcat-的-catalina-out-日志" class="headerlink" title="用 Cronolog 切割 Tomcat 的 catalina.out 日志"></a>用 Cronolog 切割 Tomcat 的 catalina.out 日志</h1><p>Cronolog 是一个小巧高效的日志文件处理工具，可以实现自动的按规则生成周期性的日志文件<br>安装 cronolog 命令如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">wget ftp://de.aminet.net/macports/distfiles/cronolog-devel/cronolog-1.7.0-beta.tar.gz</div><div class="line">tar zxvf cronolog-1.7.0-beta.tar.gz</div><div class="line">cd cronolog-1.7.0</div><div class="line">./configure</div><div class="line">make install</div><div class="line">which cronolog</div></pre></td></tr></table></figure>
-<p>也可使用 yum 进行安装<br>设置 catalina.out 位置,修改 catalina.sh：  </p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"># Add on extra jar files to CLASSPATH</div><div class="line">if [ ! -z &quot;$CLASSPATH&quot; ] ; then</div><div class="line">  CLASSPATH=&quot;$CLASSPATH&quot;:</div><div class="line">fi</div><div class="line">CLASSPATH=&quot;$CLASSPATH&quot;&quot;$CATALINA_HOME&quot;/bin/bootstrap.jar</div><div class="line">if [ -z &quot;$CATALINA_OUT&quot; ] ; then</div><div class="line">  CATALINA_OUT=&quot;$CATALINA_BASE&quot;/logs/catalina.out</div><div class="line">fi</div></pre></td></tr></table></figure>
+        <h1>用 Cronolog 切割 Tomcat 的 catalina.out 日志</h1>
+<p>Cronolog 是一个小巧高效的日志文件处理工具，可以实现自动的按规则生成周期性的日志文件<br>
+安装 cronolog 命令如下：</p>
+<p><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">wget ftp://de.aminet.net/macports/distfiles/cronolog-devel/cronolog-1.7.0-beta.tar.gz</div><div class="line">tar zxvf cronolog-1.7.0-beta.tar.gz</div><div class="line">cd cronolog-1.7.0</div><div class="line">./configure</div><div class="line">make install</div><div class="line">which cronolog</div></pre></td></tr></table></figure></p>
+<p>也可使用 yum 进行安装<br>
+设置 catalina.out 位置,修改 catalina.sh：</p>
+<p><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"># Add on extra jar files to CLASSPATH</div><div class="line">if [ ! -z &quot;$CLASSPATH&quot; ] ; then</div><div class="line">  CLASSPATH=&quot;$CLASSPATH&quot;:</div><div class="line">fi</div><div class="line">CLASSPATH=&quot;$CLASSPATH&quot;&quot;$CATALINA_HOME&quot;/bin/bootstrap.jar</div><div class="line">if [ -z &quot;$CATALINA_OUT&quot; ] ; then</div><div class="line">  CATALINA_OUT=&quot;$CATALINA_BASE&quot;/logs/catalina.out</div><div class="line">fi</div></pre></td></tr></table></figure></p>
 <p>为：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"># Add on extra jar files to CLASSPATH</div><div class="line">if [ ! -z &quot;$CLASSPATH&quot; ] ; then</div><div class="line">  CLASSPATH=&quot;$CLASSPATH&quot;:</div><div class="line">fi</div><div class="line">CLASSPATH=&quot;$CLASSPATH&quot;&quot;$CATALINA_HOME&quot;/bin/bootstrap.jar</div><div class="line">if [ -z &quot;$CATALINA_OUT&quot; ] ; then</div><div class="line">  CATALINA_OUT=/mnt/logs/%Y-%m-%d.out</div><div class="line">fi</div></pre></td></tr></table></figure>
+<p><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"># Add on extra jar files to CLASSPATH</div><div class="line">if [ ! -z &quot;$CLASSPATH&quot; ] ; then</div><div class="line">  CLASSPATH=&quot;$CLASSPATH&quot;:</div><div class="line">fi</div><div class="line">CLASSPATH=&quot;$CLASSPATH&quot;&quot;$CATALINA_HOME&quot;/bin/bootstrap.jar</div><div class="line">if [ -z &quot;$CATALINA_OUT&quot; ] ; then</div><div class="line">  CATALINA_OUT=/mnt/logs/%Y-%m-%d.out</div><div class="line">fi</div></pre></td></tr></table></figure></p>
 <p>配置 cronolog 切割日志，修改 catalina.sh</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">org.apache.catalina.startup.Bootstrap &quot;$@&quot; start \</div><div class="line">    &gt;&gt; &quot;$CATALINA_OUT&quot; 2&gt;&amp;1 &quot;&amp;&quot;</div></pre></td></tr></table></figure>
+<p><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">org.apache.catalina.startup.Bootstrap &quot;$@&quot; start \</div><div class="line">    &gt;&gt; &quot;$CATALINA_OUT&quot; 2&gt;&amp;1 &quot;&amp;&quot;</div></pre></td></tr></table></figure></p>
 <p>为：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">   org.apache.catalina.startup.Bootstrap &quot;$@&quot; start 2&gt;&amp;1 \</div><div class="line">| /usr/sbin/cronolog &quot;$CATALINA_OUT&quot; &gt;&gt; /dev/null &amp;</div></pre></td></tr></table></figure>
+<p><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">   org.apache.catalina.startup.Bootstrap &quot;$@&quot; start 2&gt;&amp;1 \</div><div class="line">| /usr/sbin/cronolog &quot;$CATALINA_OUT&quot; &gt;&gt; /dev/null &amp;</div></pre></td></tr></table></figure></p>
 <p>（有两处地方需要修改），此处的 /usr/sbin/cronolog 可以通过<code>which cronolog</code>查看，配置完毕启动 Tomcat 生效</p>
 
       
@@ -232,7 +241,7 @@
   <div class="outer">
     <div id="footer-info">
     	<div class="footer-left">
-    		&copy; 2016 静宏 <a href="http://www.miitbeian.gov.cn/">粤ICP备16064340号-1</a>
+    		&copy; 2017 静宏 <a href="http://www.miitbeian.gov.cn/">粤ICP备16064340号-1</a>
     	</div>
       	<div class="footer-right">
       		<a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia</a> by Litten
@@ -305,7 +314,7 @@ MathJax.Hub.Queue(function() {
     
     	<section class="tools-section tools-section-tag">
     			<div class="widget tagcloud" id="js-tagcloud">
-    				<a href="/tags/Android/" style="font-size: 13.33px;">Android</a> <a href="/tags/Centos/" style="font-size: 10px;">Centos</a> <a href="/tags/Cronolog/" style="font-size: 10px;">Cronolog</a> <a href="/tags/Error/" style="font-size: 10px;">Error</a> <a href="/tags/Exception/" style="font-size: 10px;">Exception</a> <a href="/tags/Hexo/" style="font-size: 10px;">Hexo</a> <a href="/tags/JVM/" style="font-size: 10px;">JVM</a> <a href="/tags/Java/" style="font-size: 16.67px;">Java</a> <a href="/tags/Linux/" style="font-size: 13.33px;">Linux</a> <a href="/tags/Log/" style="font-size: 10px;">Log</a> <a href="/tags/Redis/" style="font-size: 10px;">Redis</a> <a href="/tags/Shell/" style="font-size: 10px;">Shell</a> <a href="/tags/Spring/" style="font-size: 10px;">Spring</a> <a href="/tags/Tomcat/" style="font-size: 10px;">Tomcat</a> <a href="/tags/checkbox-padding兼容/" style="font-size: 10px;">checkbox padding兼容</a> <a href="/tags/log4j2/" style="font-size: 10px;">log4j2</a> <a href="/tags/读书笔记/" style="font-size: 20px;">读书笔记</a> <a href="/tags/－-总结/" style="font-size: 13.33px;">－ 总结</a>
+    				<a href="/tags/Android/" style="font-size: 13.33px;">Android</a> <a href="/tags/Centos/" style="font-size: 10px;">Centos</a> <a href="/tags/Cronolog/" style="font-size: 10px;">Cronolog</a> <a href="/tags/Error/" style="font-size: 10px;">Error</a> <a href="/tags/Exception/" style="font-size: 10px;">Exception</a> <a href="/tags/Hexo/" style="font-size: 10px;">Hexo</a> <a href="/tags/JVM/" style="font-size: 10px;">JVM</a> <a href="/tags/Java/" style="font-size: 16.67px;">Java</a> <a href="/tags/Linux/" style="font-size: 13.33px;">Linux</a> <a href="/tags/Log/" style="font-size: 10px;">Log</a> <a href="/tags/Redis/" style="font-size: 10px;">Redis</a> <a href="/tags/Shell/" style="font-size: 10px;">Shell</a> <a href="/tags/Spring/" style="font-size: 10px;">Spring</a> <a href="/tags/Tomcat/" style="font-size: 10px;">Tomcat</a> <a href="/tags/checkbox-padding兼容/" style="font-size: 10px;">checkbox padding兼容</a> <a href="/tags/log4j2/" style="font-size: 10px;">log4j2</a> <a href="/tags/读书笔记/" style="font-size: 20px;">读书笔记</a> <a href="/tags/－-总结/" style="font-size: 16.67px;">－ 总结</a>
     			</div>
     	</section>
     

@@ -6,31 +6,40 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <title>Java 集合框架 | 静宏的 blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="Apache Common Collections   
-Google Guava   
+  <meta name="description" content="Apache Common Collections
+Google Guava
 Java Collections Framework
 
-Collection可遍历的、可伸缩的、可查询的，而可排序不是集合的要求Iterator 设计模式解决无限的数据-&amp;gt; 有限的内存这个矛盾   
-PriorityQueue 优先队列，使用二叉堆实现,二叉堆又是用数组表示BlockingQueue">
+Collection
+可遍历的、可伸缩的、可查询的，而可排序不是集合的要求
+Iterator 设计模式解决无限的数据-&amp;gt; 有限的内存这个矛盾
+PriorityQueue 优先队列，使用二叉堆实现,二叉堆又是用数组表示
+BlockingQueue 堵塞队列，用">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Java 集合框架">
 <meta property="og:url" content="http://www.Acvrock.com/2016/12/02/20161202_java_ collections/index.html">
 <meta property="og:site_name" content="静宏的 blog">
-<meta property="og:description" content="Apache Common Collections   
-Google Guava   
+<meta property="og:description" content="Apache Common Collections
+Google Guava
 Java Collections Framework
 
-Collection可遍历的、可伸缩的、可查询的，而可排序不是集合的要求Iterator 设计模式解决无限的数据-&amp;gt; 有限的内存这个矛盾   
-PriorityQueue 优先队列，使用二叉堆实现,二叉堆又是用数组表示BlockingQueue">
+Collection
+可遍历的、可伸缩的、可查询的，而可排序不是集合的要求
+Iterator 设计模式解决无限的数据-&amp;gt; 有限的内存这个矛盾
+PriorityQueue 优先队列，使用二叉堆实现,二叉堆又是用数组表示
+BlockingQueue 堵塞队列，用">
 <meta property="og:updated_time" content="2016-12-02T15:30:11.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Java 集合框架">
-<meta name="twitter:description" content="Apache Common Collections   
-Google Guava   
+<meta name="twitter:description" content="Apache Common Collections
+Google Guava
 Java Collections Framework
 
-Collection可遍历的、可伸缩的、可查询的，而可排序不是集合的要求Iterator 设计模式解决无限的数据-&amp;gt; 有限的内存这个矛盾   
-PriorityQueue 优先队列，使用二叉堆实现,二叉堆又是用数组表示BlockingQueue">
+Collection
+可遍历的、可伸缩的、可查询的，而可排序不是集合的要求
+Iterator 设计模式解决无限的数据-&amp;gt; 有限的内存这个矛盾
+PriorityQueue 优先队列，使用二叉堆实现,二叉堆又是用数组表示
+BlockingQueue 堵塞队列，用">
   
     <link rel="alternative" href="/atom.xml" title="静宏的 blog" type="application/atom+xml">
   
@@ -159,28 +168,40 @@ PriorityQueue 优先队列，使用二叉堆实现,二叉堆又是用数组表�
     <div class="article-entry" itemprop="articleBody">
       
         <ul>
-<li>Apache Common Collections   </li>
-<li>Google Guava   </li>
+<li>Apache Common Collections</li>
+<li>Google Guava</li>
 <li>Java Collections Framework</li>
 </ul>
-<p>Collection<br>可遍历的、可伸缩的、可查询的，而可排序不是集合的要求<br>Iterator 设计模式解决无限的数据-&gt; 有限的内存这个矛盾   </p>
-<p>PriorityQueue 优先队列，使用二叉堆实现,二叉堆又是用数组表示<br>BlockingQueue 堵塞队列，用于生产者消费者模式<br>HashMap 内部为一个 Tree 实现<br>如果以插入+查找最小+删除最小来比较红黑树和最小堆时，红黑树占优<br>JDK 8 中，HashMap Hash 冲突时，使用红黑树代替链表</p>
-<p>java.lang.ref.SoftReference     软引用<br>java.lang.ref.WeakReference     弱引用<br>java.lang.ref.PhantomReference  虚引用<br>WeakHashMap<br>SkipList 跳表   ConcurrentSkipListMap  空间换时间<br>树为了排序   </p>
-<h2 id="实践"><a href="#实践" class="headerlink" title="实践"></a>实践</h2><ul>
+<p>Collection
+可遍历的、可伸缩的、可查询的，而可排序不是集合的要求<br>
+Iterator 设计模式解决无限的数据-&gt; 有限的内存这个矛盾</p>
+<p>PriorityQueue 优先队列，使用二叉堆实现,二叉堆又是用数组表示<br>
+BlockingQueue 堵塞队列，用于生产者消费者模式<br>
+HashMap 内部为一个 Tree 实现<br>
+如果以插入+查找最小+删除最小来比较红黑树和最小堆时，红黑树占优<br>
+JDK 8 中，HashMap Hash 冲突时，使用红黑树代替链表</p>
+<p>java.lang.ref.SoftReference     软引用<br>
+java.lang.ref.WeakReference     弱引用<br>
+java.lang.ref.PhantomReference  虚引用<br>
+WeakHashMap<br>
+SkipList 跳表   ConcurrentSkipListMap  空间换时间<br>
+树为了排序</p>
+<h2>实践</h2>
+<ul>
 <li>定义时使用接口</li>
 <li>底层返回集合为空时，返回长度为 0 的集合或者数组，不要返回 null</li>
 <li>谨慎对待 hashCode 和 equals</li>
-<li>用 Arrays 和 Collections 处理：排序、查找、集合类型转换、集合计算操作   </li>
-<li>如果元素长度固定，优先考虑 Array     </li>
-<li>使用泛型   </li>
-<li>遍历 List 时，考虑使用 ListIterator    </li>
-<li>频繁查找某个元素时，考虑进行排序   </li>
-<li>需要元素有序时，考虑使用 Linked 家族    </li>
-<li>使用 WeakHashMap 维护短暂使用的数据   </li>
-<li>多线程环境下优先使用 concurrent 家族   </li>
-<li>多线程环境下频繁遍历少量修改，考虑 CopyOnWriteArrayList   </li>
-<li>多线程环境下不要强一致性的遍历器，可考虑使用 ConcurrentHashahMap   </li>
-<li>多线程环境下使用 TreeMap ，考虑 ConcurrentSkipListSet 和 ConcurrentSkipListMap   </li>
+<li>用 Arrays 和 Collections 处理：排序、查找、集合类型转换、集合计算操作</li>
+<li>如果元素长度固定，优先考虑 Array</li>
+<li>使用泛型</li>
+<li>遍历 List 时，考虑使用 ListIterator</li>
+<li>频繁查找某个元素时，考虑进行排序</li>
+<li>需要元素有序时，考虑使用 Linked 家族</li>
+<li>使用 WeakHashMap 维护短暂使用的数据</li>
+<li>多线程环境下优先使用 concurrent 家族</li>
+<li>多线程环境下频繁遍历少量修改，考虑 CopyOnWriteArrayList</li>
+<li>多线程环境下不要强一致性的遍历器，可考虑使用 ConcurrentHashahMap</li>
+<li>多线程环境下使用 TreeMap ，考虑 ConcurrentSkipListSet 和 ConcurrentSkipListMap</li>
 </ul>
 
       
@@ -257,7 +278,7 @@ PriorityQueue 优先队列，使用二叉堆实现,二叉堆又是用数组表�
   <div class="outer">
     <div id="footer-info">
     	<div class="footer-left">
-    		&copy; 2016 静宏 <a href="http://www.miitbeian.gov.cn/">粤ICP备16064340号-1</a>
+    		&copy; 2017 静宏 <a href="http://www.miitbeian.gov.cn/">粤ICP备16064340号-1</a>
     	</div>
       	<div class="footer-right">
       		<a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia</a> by Litten
@@ -330,7 +351,7 @@ MathJax.Hub.Queue(function() {
     
     	<section class="tools-section tools-section-tag">
     			<div class="widget tagcloud" id="js-tagcloud">
-    				<a href="/tags/Android/" style="font-size: 13.33px;">Android</a> <a href="/tags/Centos/" style="font-size: 10px;">Centos</a> <a href="/tags/Cronolog/" style="font-size: 10px;">Cronolog</a> <a href="/tags/Error/" style="font-size: 10px;">Error</a> <a href="/tags/Exception/" style="font-size: 10px;">Exception</a> <a href="/tags/Hexo/" style="font-size: 10px;">Hexo</a> <a href="/tags/JVM/" style="font-size: 10px;">JVM</a> <a href="/tags/Java/" style="font-size: 16.67px;">Java</a> <a href="/tags/Linux/" style="font-size: 13.33px;">Linux</a> <a href="/tags/Log/" style="font-size: 10px;">Log</a> <a href="/tags/Redis/" style="font-size: 10px;">Redis</a> <a href="/tags/Shell/" style="font-size: 10px;">Shell</a> <a href="/tags/Spring/" style="font-size: 10px;">Spring</a> <a href="/tags/Tomcat/" style="font-size: 10px;">Tomcat</a> <a href="/tags/checkbox-padding兼容/" style="font-size: 10px;">checkbox padding兼容</a> <a href="/tags/log4j2/" style="font-size: 10px;">log4j2</a> <a href="/tags/读书笔记/" style="font-size: 20px;">读书笔记</a> <a href="/tags/－-总结/" style="font-size: 13.33px;">－ 总结</a>
+    				<a href="/tags/Android/" style="font-size: 13.33px;">Android</a> <a href="/tags/Centos/" style="font-size: 10px;">Centos</a> <a href="/tags/Cronolog/" style="font-size: 10px;">Cronolog</a> <a href="/tags/Error/" style="font-size: 10px;">Error</a> <a href="/tags/Exception/" style="font-size: 10px;">Exception</a> <a href="/tags/Hexo/" style="font-size: 10px;">Hexo</a> <a href="/tags/JVM/" style="font-size: 10px;">JVM</a> <a href="/tags/Java/" style="font-size: 16.67px;">Java</a> <a href="/tags/Linux/" style="font-size: 13.33px;">Linux</a> <a href="/tags/Log/" style="font-size: 10px;">Log</a> <a href="/tags/Redis/" style="font-size: 10px;">Redis</a> <a href="/tags/Shell/" style="font-size: 10px;">Shell</a> <a href="/tags/Spring/" style="font-size: 10px;">Spring</a> <a href="/tags/Tomcat/" style="font-size: 10px;">Tomcat</a> <a href="/tags/checkbox-padding兼容/" style="font-size: 10px;">checkbox padding兼容</a> <a href="/tags/log4j2/" style="font-size: 10px;">log4j2</a> <a href="/tags/读书笔记/" style="font-size: 20px;">读书笔记</a> <a href="/tags/－-总结/" style="font-size: 16.67px;">－ 总结</a>
     			</div>
     	</section>
     

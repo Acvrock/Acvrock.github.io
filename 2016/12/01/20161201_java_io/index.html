@@ -6,28 +6,37 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <title>Java IO 编码解码 | 静宏的 blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="字符串的编码/解码问题charset    
-多字节数据（short/int/long/double/float）的编码/解码问题ObjectOutputStream  （默认 Big-Endian 顺序）   
-Object 对象编码/解码问题Java Serialize 机制（二进制）以及 java.beans 包里面的 XMLEncoder (文本编码)
+  <meta name="description" content="ASCII 数字 0-9 对应的 byte 值为 48-57
+Unicode 与 Java
+char 是字符数据类型，是无符号的，占2字节，大小范围是 0-65535，是 16 位二进制的 Unicode 字符，Java 用 char 来表示一个字符
+大部分中文使用三个字节的 UTF-8 方法编码
+IO 传输的两个关键问题：
 
-Java Object 序列化机">
+Encode/Decode
+Big Endian/Little End">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Java IO 编码解码">
 <meta property="og:url" content="http://www.Acvrock.com/2016/12/01/20161201_java_io/index.html">
 <meta property="og:site_name" content="静宏的 blog">
-<meta property="og:description" content="字符串的编码/解码问题charset    
-多字节数据（short/int/long/double/float）的编码/解码问题ObjectOutputStream  （默认 Big-Endian 顺序）   
-Object 对象编码/解码问题Java Serialize 机制（二进制）以及 java.beans 包里面的 XMLEncoder (文本编码)
+<meta property="og:description" content="ASCII 数字 0-9 对应的 byte 值为 48-57
+Unicode 与 Java
+char 是字符数据类型，是无符号的，占2字节，大小范围是 0-65535，是 16 位二进制的 Unicode 字符，Java 用 char 来表示一个字符
+大部分中文使用三个字节的 UTF-8 方法编码
+IO 传输的两个关键问题：
 
-Java Object 序列化机">
-<meta property="og:updated_time" content="2016-12-02T15:30:01.000Z">
+Encode/Decode
+Big Endian/Little End">
+<meta property="og:updated_time" content="2016-12-11T15:26:47.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Java IO 编码解码">
-<meta name="twitter:description" content="字符串的编码/解码问题charset    
-多字节数据（short/int/long/double/float）的编码/解码问题ObjectOutputStream  （默认 Big-Endian 顺序）   
-Object 对象编码/解码问题Java Serialize 机制（二进制）以及 java.beans 包里面的 XMLEncoder (文本编码)
+<meta name="twitter:description" content="ASCII 数字 0-9 对应的 byte 值为 48-57
+Unicode 与 Java
+char 是字符数据类型，是无符号的，占2字节，大小范围是 0-65535，是 16 位二进制的 Unicode 字符，Java 用 char 来表示一个字符
+大部分中文使用三个字节的 UTF-8 方法编码
+IO 传输的两个关键问题：
 
-Java Object 序列化机">
+Encode/Decode
+Big Endian/Little End">
   
     <link rel="alternative" href="/atom.xml" title="静宏的 blog" type="application/atom+xml">
   
@@ -155,18 +164,50 @@ Java Object 序列化机">
     
     <div class="article-entry" itemprop="articleBody">
       
-        <ul>
-<li>字符串的编码/解码问题<br>charset    </li>
-<li>多字节数据（short/int/long/double/float）的编码/解码问题<br>ObjectOutputStream  （默认 Big-Endian 顺序）   </li>
-<li>Object 对象编码/解码问题<br>Java Serialize 机制（二进制）以及 java.beans 包里面的 XMLEncoder (文本编码)</li>
+        <p>ASCII 数字 0-9 对应的 byte 值为 48-57<br>
+Unicode 与 Java<br>
+char 是字符数据类型，是无符号的，占2字节，大小范围是 0-65535，是 16 位二进制的 Unicode 字符，Java 用 char 来表示一个字符<br>
+大部分中文使用三个字节的 UTF-8 方法编码</p>
+<p>IO 传输的两个关键问题：</p>
+<ol>
+<li>Encode/Decode</li>
+<li>Big Endian/Little Endian</li>
+</ol>
+<p>二进制方式读取文件</p>
+<ul>
+<li>ByteArrayOutputStream: 可以捕获内存缓冲区的数据，转换成字节数组</li>
+<li>ByteArrayInputStream: 可以将字节数组转化为输入流</li>
 </ul>
-<h3 id="Java-Object-序列化机制"><a href="#Java-Object-序列化机制" class="headerlink" title="Java Object 序列化机制"></a>Java Object 序列化机制</h3><ul>
-<li>当父类实现了序列化，子类也自动实现了序列化，不需要显式实现 Serializable 接口   </li>
-<li>反过来一个子类实现了 Serializable 接口，希望父类对象序列化，需要父类也实现Serializable 接口，否则父类对象的成员变量不参与序列化   </li>
-<li>当一个对象的实例变量引用其他对象，序列化该对象时，也会把引用对象也进行序列化   </li>
+<ul>
+<li>字符串的编码/解码问题<br>
+charset</li>
+<li>多字节数据（short/int/long/double/float）的编码/解码问题<br>
+ObjectOutputStream  （默认 Big-Endian 顺序）</li>
+<li>Object 对象编码/解码问题<br>
+Java Serialize 机制（二进制）以及 java.beans 包里面的 XMLEncoder (文本编码)</li>
+</ul>
+<h3>Java Object 序列化机制</h3>
+<ul>
+<li>当父类实现了序列化，子类也自动实现了序列化，不需要显式实现 Serializable 接口</li>
+<li>反过来一个子类实现了 Serializable 接口，希望父类对象序列化，需要父类也实现Serializable 接口，否则父类对象的成员变量不参与序列化</li>
+<li>当一个对象的实例变量引用其他对象，序列化该对象时，也会把引用对象也进行序列化</li>
 <li>某些对象不能序列化，如：安全问题不能远程传输的对象、无法重新还原的对象（socket、thread、Stream）</li>
 </ul>
-<p> MappedByteBuffer   </p>
+<p>RandomAccessFile==&gt;MappedByteBuffer<br>
+MappedByteBuffer:内存映射文件
+MapMode 映射模式:</p>
+<ul>
+<li>READ_ONLY 只读映射模式</li>
+<li>READ_WRITE 读写映射模式</li>
+<li>PRIVATE   通过 put 方法对 MappedByteBuffer 的修改不会修改到磁盘文件，只修改虚拟内存的修改</li>
+</ul>
+<p>MappedByteBuffer 在父类 ByteBuffer  的基础上新增了几个方法</p>
+<ol>
+<li>fore 缓冲区在   READ_WRITE 模式下，此方法对缓冲区所做的内容更改强制写入文件</li>
+<li>load 将缓冲区的内容载入物理内存，并返回该缓冲区的引用</li>
+<li>isLoaded 判断缓冲区的内容是否在物理内存，如果在就返回 true，否则返回 false</li>
+</ol>
+<p>Java IO 中应用到了装饰者模式</p>
 
       
     </div>
@@ -242,7 +283,7 @@ Java Object 序列化机">
   <div class="outer">
     <div id="footer-info">
     	<div class="footer-left">
-    		&copy; 2016 静宏 <a href="http://www.miitbeian.gov.cn/">粤ICP备16064340号-1</a>
+    		&copy; 2017 静宏 <a href="http://www.miitbeian.gov.cn/">粤ICP备16064340号-1</a>
     	</div>
       	<div class="footer-right">
       		<a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia</a> by Litten
@@ -315,7 +356,7 @@ MathJax.Hub.Queue(function() {
     
     	<section class="tools-section tools-section-tag">
     			<div class="widget tagcloud" id="js-tagcloud">
-    				<a href="/tags/Android/" style="font-size: 13.33px;">Android</a> <a href="/tags/Centos/" style="font-size: 10px;">Centos</a> <a href="/tags/Cronolog/" style="font-size: 10px;">Cronolog</a> <a href="/tags/Error/" style="font-size: 10px;">Error</a> <a href="/tags/Exception/" style="font-size: 10px;">Exception</a> <a href="/tags/Hexo/" style="font-size: 10px;">Hexo</a> <a href="/tags/JVM/" style="font-size: 10px;">JVM</a> <a href="/tags/Java/" style="font-size: 16.67px;">Java</a> <a href="/tags/Linux/" style="font-size: 13.33px;">Linux</a> <a href="/tags/Log/" style="font-size: 10px;">Log</a> <a href="/tags/Redis/" style="font-size: 10px;">Redis</a> <a href="/tags/Shell/" style="font-size: 10px;">Shell</a> <a href="/tags/Spring/" style="font-size: 10px;">Spring</a> <a href="/tags/Tomcat/" style="font-size: 10px;">Tomcat</a> <a href="/tags/checkbox-padding兼容/" style="font-size: 10px;">checkbox padding兼容</a> <a href="/tags/log4j2/" style="font-size: 10px;">log4j2</a> <a href="/tags/读书笔记/" style="font-size: 20px;">读书笔记</a> <a href="/tags/－-总结/" style="font-size: 13.33px;">－ 总结</a>
+    				<a href="/tags/Android/" style="font-size: 13.33px;">Android</a> <a href="/tags/Centos/" style="font-size: 10px;">Centos</a> <a href="/tags/Cronolog/" style="font-size: 10px;">Cronolog</a> <a href="/tags/Error/" style="font-size: 10px;">Error</a> <a href="/tags/Exception/" style="font-size: 10px;">Exception</a> <a href="/tags/Hexo/" style="font-size: 10px;">Hexo</a> <a href="/tags/JVM/" style="font-size: 10px;">JVM</a> <a href="/tags/Java/" style="font-size: 16.67px;">Java</a> <a href="/tags/Linux/" style="font-size: 13.33px;">Linux</a> <a href="/tags/Log/" style="font-size: 10px;">Log</a> <a href="/tags/Redis/" style="font-size: 10px;">Redis</a> <a href="/tags/Shell/" style="font-size: 10px;">Shell</a> <a href="/tags/Spring/" style="font-size: 10px;">Spring</a> <a href="/tags/Tomcat/" style="font-size: 10px;">Tomcat</a> <a href="/tags/checkbox-padding兼容/" style="font-size: 10px;">checkbox padding兼容</a> <a href="/tags/log4j2/" style="font-size: 10px;">log4j2</a> <a href="/tags/读书笔记/" style="font-size: 20px;">读书笔记</a> <a href="/tags/－-总结/" style="font-size: 16.67px;">－ 总结</a>
     			</div>
     	</section>
     
