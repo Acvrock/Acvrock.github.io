@@ -4,33 +4,27 @@
   <meta charset="utf-8">
   
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
-  <title>HotSpot VM 相关参数 | 静宏的 blog</title>
+  <title>如何摆脱对微博的依赖 | 静宏的 blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="HotSpot VM 相关参数
-&amp;lt;!--
-create time: 2016-06-10 13:46:04
-Author: &amp;lt;TODO: 请写上你的名字&amp;gt;
-This file is created by Marboohttp://marboo.io template file $MARBOO_HOME/.media/starts/default.md
-本文件由 Marboohtt">
+  <meta name="description" content="为什么要戒掉微博
+写代码时，如果注意力高度集中，这时候就容易出成果，但是如果走神的话很容易就磨洋工。
+造成走神的原因有很多，比如外部的原因：写代码时接到一个推销电话、同事过来请教一个问题等等，也有我们自身的原因，如：编译代码时无聊刷刷微博、看看 Q 群、逛逛淘宝。
+外部的干扰因素可以通过物理的方式来解决！比如带一个头戴式耳机，提高被骚扰的难度，但是自身的原因就控制不了啦～毕竟每天总有那么几个小时在">
 <meta property="og:type" content="article">
-<meta property="og:title" content="HotSpot VM 相关参数">
-<meta property="og:url" content="http://www.Acvrock.com/2016/06/10/jvm_gc_opt/index.html">
+<meta property="og:title" content="如何摆脱对微博的依赖">
+<meta property="og:url" content="http://www.Acvrock.com/2017/01/08/abstain_weibo/index.html">
 <meta property="og:site_name" content="静宏的 blog">
-<meta property="og:description" content="HotSpot VM 相关参数
-&amp;lt;!--
-create time: 2016-06-10 13:46:04
-Author: &amp;lt;TODO: 请写上你的名字&amp;gt;
-This file is created by Marboohttp://marboo.io template file $MARBOO_HOME/.media/starts/default.md
-本文件由 Marboohtt">
-<meta property="og:updated_time" content="2016-06-10T09:37:43.000Z">
+<meta property="og:description" content="为什么要戒掉微博
+写代码时，如果注意力高度集中，这时候就容易出成果，但是如果走神的话很容易就磨洋工。
+造成走神的原因有很多，比如外部的原因：写代码时接到一个推销电话、同事过来请教一个问题等等，也有我们自身的原因，如：编译代码时无聊刷刷微博、看看 Q 群、逛逛淘宝。
+外部的干扰因素可以通过物理的方式来解决！比如带一个头戴式耳机，提高被骚扰的难度，但是自身的原因就控制不了啦～毕竟每天总有那么几个小时在">
+<meta property="og:updated_time" content="2017-01-09T15:17:06.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="HotSpot VM 相关参数">
-<meta name="twitter:description" content="HotSpot VM 相关参数
-&amp;lt;!--
-create time: 2016-06-10 13:46:04
-Author: &amp;lt;TODO: 请写上你的名字&amp;gt;
-This file is created by Marboohttp://marboo.io template file $MARBOO_HOME/.media/starts/default.md
-本文件由 Marboohtt">
+<meta name="twitter:title" content="如何摆脱对微博的依赖">
+<meta name="twitter:description" content="为什么要戒掉微博
+写代码时，如果注意力高度集中，这时候就容易出成果，但是如果走神的话很容易就磨洋工。
+造成走神的原因有很多，比如外部的原因：写代码时接到一个推销电话、同事过来请教一个问题等等，也有我们自身的原因，如：编译代码时无聊刷刷微博、看看 Q 群、逛逛淘宝。
+外部的干扰因素可以通过物理的方式来解决！比如带一个头戴式耳机，提高被骚扰的难度，但是自身的原因就控制不了啦～毕竟每天总有那么几个小时在">
   
     <link rel="alternative" href="/atom.xml" title="静宏的 blog" type="application/atom+xml">
   
@@ -140,7 +134,7 @@ This file is created by Marboohttp://marboo.io template file $MARBOO_HOME/.media
 </nav>
 
       <div class="body-wrap">
-        <article id="post-jvm_gc_opt" class="article article-type-post" itemscope itemprop="blogPost">
+        <article id="post-abstain_weibo" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <input type="hidden" class="isFancy" />
@@ -150,7 +144,7 @@ This file is created by Marboohttp://marboo.io template file $MARBOO_HOME/.media
         
   
     <h1 class="article-title" itemprop="name">
-      HotSpot VM 相关参数
+      如何摆脱对微博的依赖
     </h1>
   
 
@@ -158,103 +152,42 @@ This file is created by Marboohttp://marboo.io template file $MARBOO_HOME/.media
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h1>HotSpot VM 相关参数</h1>
-<p>&lt;!--
-create time: 2016-06-10 13:46:04
-Author: &lt;TODO: 请写上你的名字&gt;</p>
-<p>This file is created by Marboo<a href="http://marboo.io" target="_blank" rel="external">http://marboo.io</a> template file $MARBOO_HOME/.media/starts/default.md
-本文件由 Marboo<a href="http://marboo.io" target="_blank" rel="external">http://marboo.io</a> 模板文件 $MARBOO_HOME/.media/starts/default.md 创建
---&gt;</p>
-<p>##HotSpot VM 关于GC日志相关的命令行选项</p>
-<p><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">-XX:+PrintGCTimeStamps -XX:+PrintGCDetails -Xloggc:&lt;filename&gt;</div></pre></td></tr></table></figure></p>
-<p>生成文件格式：</p>
-<p><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">2.660: [GC [PSYoungGen: 142835K-&gt;10734K(142848K)] 144991K-&gt;26629K(317440K), 0.0203930 secs] [Times: user=0.05 sys=0.02, real=0.02 secs] </div><div class="line">86.592: [Full GC [PSYoungGen: 3456K-&gt;0K(1329664K)] [ParOldGen: 153539K-&gt;90508K(212480K)] 156995K-&gt;90508K(1542144K) [PSPermGen: 67518K-&gt;67135K(220160K)], 0.4519800 secs] [Times: user=1.54 sys=0.03, real=0.45 secs]</div></pre></td></tr></table></figure></p>
-<ul>
-<li><strong>2.660</strong> 是从 JVM 启动直到垃圾收集发生所经历的时间</li>
-<li><strong>GC</strong> 代表是一次 Minor GC</li>
-<li><strong>Full GC</strong> 代表一次 Full GC</li>
-<li><strong>[PSYoungGen: 142835K-&gt;10734K(142848K)]</strong> 的 PSYoungGen 表示使用了多线程垃圾收集器 Parallel Scavenge，其它的收集器还有：多线程 ParNew 、单线程 ParNew、G1。
-箭头（-&gt;）左边是回收前新生代占用空间，右边代表回收后占用的空间，Ps：Minor GC 回收后 Eden 空间为空，所以回收后的空间可以视为 Surivor 占用空间，括号里代表新生代的总大小</li>
-<li><strong>144991K-&gt;26629K(317440K)</strong> 代表垃圾收集后 Java 堆堆使用情况（包括新生代和老年代），箭头（-&gt;）左边是回收前 Java 堆占用空间，右边代表回收后占用的空间，括号里代表 Java 堆的总大小 ,Ps:根据 Java 堆总大小和新生代总大小，可以推算出老年代占用空间</li>
-<li><strong>0.0203930 secs</strong> 代表垃圾收集过程所消耗的时长</li>
-<li><strong>[Times: user=0.05 sys=0.02, real=0.02 secs]</strong> 提供了 CPU和时间消耗情况。user 是用户态的消耗时间，即运行于 JVM 中的时间。</li>
-</ul>
-<p>如果想使用日历时间打印时间戳，可以使用 <strong>-XX:PrintGCDateStamps</strong> 替换 <strong>-XX:+PrintGCTimeStamps`</strong>
-生成文件格式将会变成：</p>
-<p><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">2016-06-10T15:29:34.899-0800: 19.409: [GC [PSYoungGen: 1291624K-&gt;16960K(1337344K)] 1396481K-&gt;131948K(1511936K), 0.0174330 secs] [Times: user=0.09 sys=0.02, real=0.02 secs]</div></pre></td></tr></table></figure></p>
-<h2>设置内存空间</h2>
-<ul>
-<li>-Xmx 指定了新生代和老年代空间（Java 堆）大小的最大值</li>
-<li>-Xms 指定了新生代和老年代空间（Java 堆）大小的初始值和最小值</li>
-<li>关注吞吐量及延迟的 Java 应用应该将 -Xmx 和 －Xms 设置为同一值，避免 Java 堆伸缩带来的 Full GC</li>
-<li>-XX:NewSize=&lt;n&gt;[g|m|k] 新生代空间大小的初始值和最小值，必须和-XX:MaxNewSize配合使用</li>
-<li>-XX:MaxNewSize=&lt;n&gt;[g|m|k] 新生代空间大小的最大值，必须和-XX:NewSize配合使用</li>
-<li>-Xmn&lt;n&gt;[g|m|k] 一次性设置新生代空间的初始值、最小值、最大值，如果设置了该值，新生代大小会恒定，所以只有 -Xmx 和 －Xms 设置为同一值时才使用 -Xmn 选项</li>
-<li>老年代空间会根据 Java 堆空间和新生代空间隐性设定，最大为：-Xmx  减去  -XX:NewSize，最小为-Xmx 减去 -XX:MaxNewSize</li>
-<li>-XX:PermSize=&lt;n&gt;[g|m|k] 永久代空间初始值和最小值</li>
-<li>-XX:MaxPermSize=&lt;n&gt;[g|m|k] 永久代空间的最大值</li>
-<li>关注性能的 Java 应用应该将 -XX:PermSize 和 -XX:MaxPermSize 设置为同一值，避免永久堆大小调整带来的 Full GC</li>
-<li>如果不显式设置 Java 堆大小，JVM 会根据系统自动选择合适的值</li>
-<li>JVM 内存调节的计算法则：</li>
-</ul>
-<table>
-<thead>
-<tr>
-<th>空间</th>
-<th>命令行选项</th>
-<th>占用倍数</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Java 堆</td>
-<td>-Xms 和 -Xmx</td>
-<td>3～4 倍 Full GC 后的老年代空间占用量</td>
-</tr>
-<tr>
-<td>永久代</td>
-<td>-XX:PermSize 和 -XX:MaxPermSize</td>
-<td>1.2～1.5 倍 Full GC 后的永久代空间占用量</td>
-</tr>
-<tr>
-<td>新生代</td>
-<td>-Xmn</td>
-<td>1～1.5 倍 Full GC 后的老年代空间占用量</td>
-</tr>
-<tr>
-<td>老年代</td>
-<td>Java 堆大小减新生代大小</td>
-<td>2～3 倍 Full GC 后老年代空间占用量</td>
-</tr>
-</tbody>
-</table>
-<ul>
-<li>调节新生代空间准则:
-<ul>
-<li>老年代空间大小不应该小于活跃数据大小的 1.5 倍</li>
-<li>新生代空间至少应为 Java 堆 大小的 10％</li>
-<li>增大 Java 堆大小时，不能超过 JVM 可用的物理内存数</li>
-</ul>
-</li>
-</ul>
-<h2>设置收集器</h2>
-<ul>
-<li>-XX:+UseParallelOldGC 指定使用 Throughput 收集器</li>
-<li>-XX:+UseConcM
-来源于 Java 性能优化权威指南 第七章</li>
-</ul>
+        <h5>为什么要戒掉微博</h5>
+<p>写代码时，如果注意力高度集中，这时候就容易出成果，但是如果走神的话很容易就磨洋工。<br>
+造成走神的原因有很多，比如外部的原因：写代码时接到一个推销电话、同事过来请教一个问题等等，也有我们自身的原因，如：编译代码时无聊刷刷微博、看看 Q 群、逛逛淘宝。<br>
+外部的干扰因素可以通过物理的方式来解决！比如带一个头戴式耳机，提高被骚扰的难度，但是自身的原因就控制不了啦～毕竟每天总有那么几个小时在 building，这时候如何克制住心理的魔鬼，不去看那些新鲜事呢？</p>
+<p>网上也有类似的文章，一般的解决方法有这几种：</p>
+<ol>
+<li>找件事来替代微博，形成一种新的行为习惯。例如原本你晚上都闲着上网的，现在你每晚去游泳1小时，不带手机，回来后不急着开电脑，陪家人看会儿电视……然后刷会儿微博，尽量不留言和人做无营养的交流互动，批判性的审视自己关注的人的到底有多少讯息是对自己有益的，转变对微博的看法……</li>
+<li>转跳注意力：调整关注人群，选择一些能有所长进和思考的人关注，及时在阅读过程中专跳出去，比如你看到某名博上关于某社会事件的争论，在稍微看浏览完相关信息和大众观点后，跳出来，拿纸笔或者在电脑上记录下你的所想和议论，（我这种笨人随便写点什么都会花掉大半个晚上的时间），或者是看到某人推荐一本书，你就隔日买来进行阅读，总之就是把微博作为一个讯息点，扩展其内容到别的主体上，具体因人而异；</li>
+<li>如果你很难脱离微博，也可以用延迟的办法，将一日的内容分为几次来刷，强迫自己，只有下班回家路上才刷一次，追溯一下早上的内容，也不要三五分钟就叮当一下。</li>
+</ol>
+<p>但是还是避免不了每当 IDEA 编译时，不假思索地以迅雷不及掩耳之势点击 Chrome 图标，敲下 weibo.com 并回车...</p>
+<h5>这时候，我们需要一种强制性措施</h5>
+<p>打开终端，输入 <code>vim /etc/hosts</code>，打开 hosts 文件，在最下面添加一行<br>
+<code>127.0.0.1 weibo.com</code><br>
+这时候再不假思索地点击 Chrome 图标，敲下 weibo.com 并回车时，就会进入一个空白页了</p>
+<p>全文完</p>
+<h5>但是如果没有微博，我们自然会有新的消磨时间的工具，如 v2ex.com，reddit.com，因为总有那么几段时间是等待的</h5>
+<p>不妨将我们的注意力引导到更加积极的地方去，比如说 <a href="http://e.xitu.io/" target="_blank" rel="external">稀土掘金</a>、<a href="http://segmentfault.com" target="_blank" rel="external">segmentfault</a><br>
+说干就干：<br>
+打开终端，先 <code>ping</code> 一下 e.xitu.io 的网站，得到 ip 为 207.226.141.170 ，然后
+输入 <code>vim /etc/hosts</code>，打开 hosts 文件，在最下面添加一行<br>
+<code>127.0.0.1 weibo.com</code><br>
+修改完毕在访问 weibo.com，但是这个时候却不能出现我们希望看到的 e.xitu.io 的首页，看起来对方服务器反向代理时处理了，所以只能换另外一种方式<br>
+--未完待续</p>
 
       
     </div>
     <div class="article-info article-info-index">
       
-      <a href="/2016/06/10/jvm_gc_opt/" class="archive-article-date">
-  	<time datetime="2016-06-10T09:31:24.000Z" itemprop="datePublished"><i class="icon-clock"></i>2016-06-10</time>
+      <a href="/2017/01/08/abstain_weibo/" class="archive-article-date">
+  	<time datetime="2017-01-08T12:31:21.000Z" itemprop="datePublished"><i class="icon-clock"></i>2017-01-08</time>
 </a>
       
 	<div class="article-tag tagcloud">
 		<i class="icon-price-tags"></i>
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/JVM/">JVM</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Java/">Java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/读书笔记/">读书笔记</a></li></ul>
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Nginx/">Nginx</a></li></ul>
 	</div>
 
       
@@ -267,18 +200,9 @@ Author: &lt;TODO: 请写上你的名字&gt;</p>
   
 <nav id="article-nav">
   
-    <a href="/2016/08/28/redis_auto-start_on_linux/" id="article-nav-newer" class="article-nav-link-wrap">
-      <i class="icon-circle-left"></i>
-      <div class="article-nav-title">
-        
-          在 Linux 下配置 Redis 开机启动
-        
-      </div>
-    </a>
   
-  
-    <a href="/2016/05/02/infinity_and_nan/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">Java 中的无穷和非数</div>
+    <a href="/2017/01/01/20170101_2016-2017/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">静宏的 2016 -&gt; 2017</div>
       <i class="icon-circle-right"></i>
     </a>
   

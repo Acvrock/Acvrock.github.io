@@ -4,33 +4,21 @@
   <meta charset="utf-8">
   
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
-  <title>HotSpot VM 相关参数 | 静宏的 blog</title>
+  <title>Java 中的基本数据类型 | 静宏的 blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="HotSpot VM 相关参数
-&amp;lt;!--
-create time: 2016-06-10 13:46:04
-Author: &amp;lt;TODO: 请写上你的名字&amp;gt;
-This file is created by Marboohttp://marboo.io template file $MARBOO_HOME/.media/starts/default.md
-本文件由 Marboohtt">
+  <meta name="description" content="Java 中数值类型的表示，byte 占用 8 个 bit ，每个 bit 只有 0 和 1 两个值，byte 的值在 bit 中表示就是二进制，所以值为 4 的 byte ，在计算机中表示为二进制的原码：
+00000100,如果是负数，则表示为负数正值的补码，如： -4 表示为：11111100，可以看出，如果首位为 1 时，表示负数，首位为 0 时，表示正数。所以 byte 的最大值和最小值分">
 <meta property="og:type" content="article">
-<meta property="og:title" content="HotSpot VM 相关参数">
-<meta property="og:url" content="http://www.Acvrock.com/2016/06/10/jvm_gc_opt/index.html">
+<meta property="og:title" content="Java 中的基本数据类型">
+<meta property="og:url" content="http://www.Acvrock.com/2016/12/10/java_byte copy/index.html">
 <meta property="og:site_name" content="静宏的 blog">
-<meta property="og:description" content="HotSpot VM 相关参数
-&amp;lt;!--
-create time: 2016-06-10 13:46:04
-Author: &amp;lt;TODO: 请写上你的名字&amp;gt;
-This file is created by Marboohttp://marboo.io template file $MARBOO_HOME/.media/starts/default.md
-本文件由 Marboohtt">
-<meta property="og:updated_time" content="2016-06-10T09:37:43.000Z">
+<meta property="og:description" content="Java 中数值类型的表示，byte 占用 8 个 bit ，每个 bit 只有 0 和 1 两个值，byte 的值在 bit 中表示就是二进制，所以值为 4 的 byte ，在计算机中表示为二进制的原码：
+00000100,如果是负数，则表示为负数正值的补码，如： -4 表示为：11111100，可以看出，如果首位为 1 时，表示负数，首位为 0 时，表示正数。所以 byte 的最大值和最小值分">
+<meta property="og:updated_time" content="2016-12-11T07:33:55.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="HotSpot VM 相关参数">
-<meta name="twitter:description" content="HotSpot VM 相关参数
-&amp;lt;!--
-create time: 2016-06-10 13:46:04
-Author: &amp;lt;TODO: 请写上你的名字&amp;gt;
-This file is created by Marboohttp://marboo.io template file $MARBOO_HOME/.media/starts/default.md
-本文件由 Marboohtt">
+<meta name="twitter:title" content="Java 中的基本数据类型">
+<meta name="twitter:description" content="Java 中数值类型的表示，byte 占用 8 个 bit ，每个 bit 只有 0 和 1 两个值，byte 的值在 bit 中表示就是二进制，所以值为 4 的 byte ，在计算机中表示为二进制的原码：
+00000100,如果是负数，则表示为负数正值的补码，如： -4 表示为：11111100，可以看出，如果首位为 1 时，表示负数，首位为 0 时，表示正数。所以 byte 的最大值和最小值分">
   
     <link rel="alternative" href="/atom.xml" title="静宏的 blog" type="application/atom+xml">
   
@@ -140,7 +128,7 @@ This file is created by Marboohttp://marboo.io template file $MARBOO_HOME/.media
 </nav>
 
       <div class="body-wrap">
-        <article id="post-jvm_gc_opt" class="article article-type-post" itemscope itemprop="blogPost">
+        <article id="post-java_byte copy" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <input type="hidden" class="isFancy" />
@@ -150,7 +138,7 @@ This file is created by Marboohttp://marboo.io template file $MARBOO_HOME/.media
         
   
     <h1 class="article-title" itemprop="name">
-      HotSpot VM 相关参数
+      Java 中的基本数据类型
     </h1>
   
 
@@ -158,103 +146,71 @@ This file is created by Marboohttp://marboo.io template file $MARBOO_HOME/.media
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h1>HotSpot VM 相关参数</h1>
-<p>&lt;!--
-create time: 2016-06-10 13:46:04
-Author: &lt;TODO: 请写上你的名字&gt;</p>
-<p>This file is created by Marboo<a href="http://marboo.io" target="_blank" rel="external">http://marboo.io</a> template file $MARBOO_HOME/.media/starts/default.md
-本文件由 Marboo<a href="http://marboo.io" target="_blank" rel="external">http://marboo.io</a> 模板文件 $MARBOO_HOME/.media/starts/default.md 创建
---&gt;</p>
-<p>##HotSpot VM 关于GC日志相关的命令行选项</p>
-<p><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">-XX:+PrintGCTimeStamps -XX:+PrintGCDetails -Xloggc:&lt;filename&gt;</div></pre></td></tr></table></figure></p>
-<p>生成文件格式：</p>
-<p><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">2.660: [GC [PSYoungGen: 142835K-&gt;10734K(142848K)] 144991K-&gt;26629K(317440K), 0.0203930 secs] [Times: user=0.05 sys=0.02, real=0.02 secs] </div><div class="line">86.592: [Full GC [PSYoungGen: 3456K-&gt;0K(1329664K)] [ParOldGen: 153539K-&gt;90508K(212480K)] 156995K-&gt;90508K(1542144K) [PSPermGen: 67518K-&gt;67135K(220160K)], 0.4519800 secs] [Times: user=1.54 sys=0.03, real=0.45 secs]</div></pre></td></tr></table></figure></p>
+        <p>Java 中数值类型的表示，byte 占用 8 个 bit ，每个 bit 只有 0 和 1 两个值，byte 的值在 bit 中表示就是二进制，所以值为 4 的 byte ，在计算机中表示为二进制的原码：<br>
+00000100,如果是负数，则表示为负数正值的补码，如： -4 表示为：11111100，可以看出，如果首位为 1 时，表示负数，首位为 0 时，表示正数。所以 byte 的最大值和最小值分别是 127 、-127</p>
 <ul>
-<li><strong>2.660</strong> 是从 JVM 启动直到垃圾收集发生所经历的时间</li>
-<li><strong>GC</strong> 代表是一次 Minor GC</li>
-<li><strong>Full GC</strong> 代表一次 Full GC</li>
-<li><strong>[PSYoungGen: 142835K-&gt;10734K(142848K)]</strong> 的 PSYoungGen 表示使用了多线程垃圾收集器 Parallel Scavenge，其它的收集器还有：多线程 ParNew 、单线程 ParNew、G1。
-箭头（-&gt;）左边是回收前新生代占用空间，右边代表回收后占用的空间，Ps：Minor GC 回收后 Eden 空间为空，所以回收后的空间可以视为 Surivor 占用空间，括号里代表新生代的总大小</li>
-<li><strong>144991K-&gt;26629K(317440K)</strong> 代表垃圾收集后 Java 堆堆使用情况（包括新生代和老年代），箭头（-&gt;）左边是回收前 Java 堆占用空间，右边代表回收后占用的空间，括号里代表 Java 堆的总大小 ,Ps:根据 Java 堆总大小和新生代总大小，可以推算出老年代占用空间</li>
-<li><strong>0.0203930 secs</strong> 代表垃圾收集过程所消耗的时长</li>
-<li><strong>[Times: user=0.05 sys=0.02, real=0.02 secs]</strong> 提供了 CPU和时间消耗情况。user 是用户态的消耗时间，即运行于 JVM 中的时间。</li>
+<li>负数的二进制位表示过程如下：<br>
+-4 取正值：<code>4</code><br>
+正值转换为原码  <code>00000100</code><br>
+原码取反为反码  <code>11111011</code><br>
+反码+1变成补码   <code>11111100</code></li>
 </ul>
-<p>如果想使用日历时间打印时间戳，可以使用 <strong>-XX:PrintGCDateStamps</strong> 替换 <strong>-XX:+PrintGCTimeStamps`</strong>
-生成文件格式将会变成：</p>
-<p><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">2016-06-10T15:29:34.899-0800: 19.409: [GC [PSYoungGen: 1291624K-&gt;16960K(1337344K)] 1396481K-&gt;131948K(1511936K), 0.0174330 secs] [Times: user=0.09 sys=0.02, real=0.02 secs]</div></pre></td></tr></table></figure></p>
-<h2>设置内存空间</h2>
+<p>字符类型:char(16)<br>
+布尔类型:boolean<br>
+数值类型:byte(8)\short(16)\int(32)\long(64)\float(32)\double(64)</p>
 <ul>
-<li>-Xmx 指定了新生代和老年代空间（Java 堆）大小的最大值</li>
-<li>-Xms 指定了新生代和老年代空间（Java 堆）大小的初始值和最小值</li>
-<li>关注吞吐量及延迟的 Java 应用应该将 -Xmx 和 －Xms 设置为同一值，避免 Java 堆伸缩带来的 Full GC</li>
-<li>-XX:NewSize=&lt;n&gt;[g|m|k] 新生代空间大小的初始值和最小值，必须和-XX:MaxNewSize配合使用</li>
-<li>-XX:MaxNewSize=&lt;n&gt;[g|m|k] 新生代空间大小的最大值，必须和-XX:NewSize配合使用</li>
-<li>-Xmn&lt;n&gt;[g|m|k] 一次性设置新生代空间的初始值、最小值、最大值，如果设置了该值，新生代大小会恒定，所以只有 -Xmx 和 －Xms 设置为同一值时才使用 -Xmn 选项</li>
-<li>老年代空间会根据 Java 堆空间和新生代空间隐性设定，最大为：-Xmx  减去  -XX:NewSize，最小为-Xmx 减去 -XX:MaxNewSize</li>
-<li>-XX:PermSize=&lt;n&gt;[g|m|k] 永久代空间初始值和最小值</li>
-<li>-XX:MaxPermSize=&lt;n&gt;[g|m|k] 永久代空间的最大值</li>
-<li>关注性能的 Java 应用应该将 -XX:PermSize 和 -XX:MaxPermSize 设置为同一值，避免永久堆大小调整带来的 Full GC</li>
-<li>如果不显式设置 Java 堆大小，JVM 会根据系统自动选择合适的值</li>
-<li>JVM 内存调节的计算法则：</li>
+<li>位运算
+左移:<code>&lt;&lt;</code> 丢弃最高位，0 补最低位，如果没有溢出，就是 n 次方<br>
+右移:<code>&gt;&gt;</code> 符号位不变，左边补上符号位<br>
+无符号位右移:<code>&gt;&gt;&gt;</code> 丢弃最低位，0 补最高位</li>
 </ul>
-<table>
-<thead>
-<tr>
-<th>空间</th>
-<th>命令行选项</th>
-<th>占用倍数</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Java 堆</td>
-<td>-Xms 和 -Xmx</td>
-<td>3～4 倍 Full GC 后的老年代空间占用量</td>
-</tr>
-<tr>
-<td>永久代</td>
-<td>-XX:PermSize 和 -XX:MaxPermSize</td>
-<td>1.2～1.5 倍 Full GC 后的永久代空间占用量</td>
-</tr>
-<tr>
-<td>新生代</td>
-<td>-Xmn</td>
-<td>1～1.5 倍 Full GC 后的老年代空间占用量</td>
-</tr>
-<tr>
-<td>老年代</td>
-<td>Java 堆大小减新生代大小</td>
-<td>2～3 倍 Full GC 后老年代空间占用量</td>
-</tr>
-</tbody>
-</table>
+<p>按位与、按位或、按位取反、按位异或</p>
+<ol>
+<li>网络通信、协议解析、高性能编程比较常见</li>
+<li>位运算是针对整型的，进行位运算时，除了 long 类型外，其他类型会自动转为 ing 型</li>
+<li>如果移动的位数超过了 32 位（long是 64 位），那么编译器会对移动的位数取模，如对 int 型移动 33 位，实际上只移动了 33%32=1 位</li>
+</ol>
+<p>Java 包装类型内存大小比 基本类型大得多<br>
+BigInteger\BigDecimal 表示大整数和大浮点数</p>
+<ol>
+<li>可以精确地表示大整数和小数</li>
+<li>不可变性，不适合于大量的数学运算</li>
+<li>如果需要精确计算，使用 String 构造 BigDecimal ，避免使用 double ，因为 doublle 本身就不准确了</li>
+<li>equals 方法认为 0.1 和 0.1 是相等的，但是 0.10 和 0.1 是不等的。方法 compareTo 认为 0.1 和 0.1 相等， 0.10 和 0.1 是相等的，所以比较 BigDecimal 时，使用 compareTo()</li>
+<li>有时候运算无法得到精确结果，产生无限循环小数，可以显式地控制舍入</li>
+</ol>
+<p>Java 数组是特殊的对象<br>
+如何让对象数组缓存友好？</p>
 <ul>
-<li>调节新生代空间准则:
-<ul>
-<li>老年代空间大小不应该小于活跃数据大小的 1.5 倍</li>
-<li>新生代空间至少应为 Java 堆 大小的 10％</li>
-<li>增大 Java 堆大小时，不能超过 JVM 可用的物理内存数</li>
+<li>程序启动是预先生成数组中引用的对象，增加缓存友好的概率<br>
+For(...){
+a[i] = new ObjectXX()
+}</li>
+<li>unsafe 控制 Java 对象内存位置</li>
+<li>不使用对象</li>
 </ul>
-</li>
-</ul>
-<h2>设置收集器</h2>
+<p>java.util.Arrays 提供了 Java 数组排序方法，基本类型使用 DualPivotQuickSort 算法<br>
+，Java 对象排序使用 TimSort 算法(JDK7),MergeSort（JDK6）</p>
+<p>Java 数组高级技巧</p>
 <ul>
-<li>-XX:+UseParallelOldGC 指定使用 Throughput 收集器</li>
-<li>-XX:+UseConcM
-来源于 Java 性能优化权威指南 第七章</li>
+<li>初始化数组: Arrays.setAll(array,generator);</li>
+<li>高效复制数组: int[] arr = Arrays.copyof(源数组,新数组长度);</li>
+<li>高效排序: Arrays.sort、并行排序 Arrays.parallelSort</li>
+<li>高效查询: Arrays.binarySearch</li>
+<li>输出内容为字符串: Arrays.toString(array)</li>
 </ul>
 
       
     </div>
     <div class="article-info article-info-index">
       
-      <a href="/2016/06/10/jvm_gc_opt/" class="archive-article-date">
-  	<time datetime="2016-06-10T09:31:24.000Z" itemprop="datePublished"><i class="icon-clock"></i>2016-06-10</time>
+      <a href="/2016/12/10/java_byte copy/" class="archive-article-date">
+  	<time datetime="2016-12-10T13:44:10.000Z" itemprop="datePublished"><i class="icon-clock"></i>2016-12-10</time>
 </a>
       
 	<div class="article-tag tagcloud">
 		<i class="icon-price-tags"></i>
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/JVM/">JVM</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Java/">Java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/读书笔记/">读书笔记</a></li></ul>
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/读书笔记/">读书笔记</a></li></ul>
 	</div>
 
       
@@ -267,18 +223,18 @@ Author: &lt;TODO: 请写上你的名字&gt;</p>
   
 <nav id="article-nav">
   
-    <a href="/2016/08/28/redis_auto-start_on_linux/" id="article-nav-newer" class="article-nav-link-wrap">
+    <a href="/2017/01/01/20170101_2016-2017/" id="article-nav-newer" class="article-nav-link-wrap">
       <i class="icon-circle-left"></i>
       <div class="article-nav-title">
         
-          在 Linux 下配置 Redis 开机启动
+          静宏的 2016 -&gt; 2017
         
       </div>
     </a>
   
   
-    <a href="/2016/05/02/infinity_and_nan/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">Java 中的无穷和非数</div>
+    <a href="/2016/12/10/java_byte/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">Java 中的基本数据类型</div>
       <i class="icon-circle-right"></i>
     </a>
   
