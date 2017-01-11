@@ -560,7 +560,9 @@
           return e.url
         },
         avatarUrl: function(e) {
-          return e.avatar_url || rt.data.default_avatar_url
+          var B =  e.avatar_url || rt.data.default_avatar_url;
+        B = B.replace(/http:/g, "https:");
+        return B
         },
         loginUrl: function(e, t) {
           return t || (t = {}), c.sso && c.sso.login && (t.sso = 1, t.redirect_uri = c.sso.login), a() + "/login/" + e + "/" + x(t)
