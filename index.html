@@ -343,7 +343,7 @@
 <p>按位与、按位或、按位取反、按位异或</p>
 <ol>
 <li>网络通信、协议解析、高性能编程比较常见</li>
-<li>位运算是针对整型的，进行位运算时，除了 long 类型外，其他类型会自动转为 ing 型</li>
+<li>位运算是针对整型的，进行位运算时，除了 long 类型外，其他类型会自动转为 int 型</li>
 <li>如果移动的位数超过了 32 位（long是 64 位），那么编译器会对移动的位数取模，如对 int 型移动 33 位，实际上只移动了 33%32=1 位</li>
 </ol>
 <p>Java 包装类型内存大小比 基本类型大得多<br>
@@ -381,108 +381,6 @@ a[i] = new ObjectXX()
     <div class="article-info article-info-index">
       
       <a href="/2016/12/10/java_byte/" class="archive-article-date">
-  	<time datetime="2016-12-10T13:44:10.000Z" itemprop="datePublished"><i class="icon-clock"></i>2016-12-10</time>
-</a>
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags"></i>
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/读书笔记/">读书笔记</a></li></ul>
-	</div>
-
-      
-
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-
-
-
-
-
-
-
-
-
-  
-    <article id="post-java_byte copy" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/12/10/java_byte copy/">Java 中的基本数据类型</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>Java 中数值类型的表示，byte 占用 8 个 bit ，每个 bit 只有 0 和 1 两个值，byte 的值在 bit 中表示就是二进制，所以值为 4 的 byte ，在计算机中表示为二进制的原码：<br>
-00000100,如果是负数，则表示为负数正值的补码，如： -4 表示为：11111100，可以看出，如果首位为 1 时，表示负数，首位为 0 时，表示正数。所以 byte 的最大值和最小值分别是 127 、-127</p>
-<ul>
-<li>负数的二进制位表示过程如下：<br>
--4 取正值：<code>4</code><br>
-正值转换为原码  <code>00000100</code><br>
-原码取反为反码  <code>11111011</code><br>
-反码+1变成补码   <code>11111100</code></li>
-</ul>
-<p>字符类型:char(16)<br>
-布尔类型:boolean<br>
-数值类型:byte(8)\short(16)\int(32)\long(64)\float(32)\double(64)</p>
-<ul>
-<li>位运算
-左移:<code>&lt;&lt;</code> 丢弃最高位，0 补最低位，如果没有溢出，就是 n 次方<br>
-右移:<code>&gt;&gt;</code> 符号位不变，左边补上符号位<br>
-无符号位右移:<code>&gt;&gt;&gt;</code> 丢弃最低位，0 补最高位</li>
-</ul>
-<p>按位与、按位或、按位取反、按位异或</p>
-<ol>
-<li>网络通信、协议解析、高性能编程比较常见</li>
-<li>位运算是针对整型的，进行位运算时，除了 long 类型外，其他类型会自动转为 ing 型</li>
-<li>如果移动的位数超过了 32 位（long是 64 位），那么编译器会对移动的位数取模，如对 int 型移动 33 位，实际上只移动了 33%32=1 位</li>
-</ol>
-<p>Java 包装类型内存大小比 基本类型大得多<br>
-BigInteger\BigDecimal 表示大整数和大浮点数</p>
-<ol>
-<li>可以精确地表示大整数和小数</li>
-<li>不可变性，不适合于大量的数学运算</li>
-<li>如果需要精确计算，使用 String 构造 BigDecimal ，避免使用 double ，因为 doublle 本身就不准确了</li>
-<li>equals 方法认为 0.1 和 0.1 是相等的，但是 0.10 和 0.1 是不等的。方法 compareTo 认为 0.1 和 0.1 相等， 0.10 和 0.1 是相等的，所以比较 BigDecimal 时，使用 compareTo()</li>
-<li>有时候运算无法得到精确结果，产生无限循环小数，可以显式地控制舍入</li>
-</ol>
-<p>Java 数组是特殊的对象<br>
-如何让对象数组缓存友好？</p>
-<ul>
-<li>程序启动是预先生成数组中引用的对象，增加缓存友好的概率<br>
-For(...){
-a[i] = new ObjectXX()
-}</li>
-<li>unsafe 控制 Java 对象内存位置</li>
-<li>不使用对象</li>
-</ul>
-<p>java.util.Arrays 提供了 Java 数组排序方法，基本类型使用 DualPivotQuickSort 算法<br>
-，Java 对象排序使用 TimSort 算法(JDK7),MergeSort（JDK6）</p>
-<p>Java 数组高级技巧</p>
-<ul>
-<li>初始化数组: Arrays.setAll(array,generator);</li>
-<li>高效复制数组: int[] arr = Arrays.copyof(源数组,新数组长度);</li>
-<li>高效排序: Arrays.sort、并行排序 Arrays.parallelSort</li>
-<li>高效查询: Arrays.binarySearch</li>
-<li>输出内容为字符串: Arrays.toString(array)</li>
-</ul>
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      <a href="/2016/12/10/java_byte copy/" class="archive-article-date">
   	<time datetime="2016-12-10T13:44:10.000Z" itemprop="datePublished"><i class="icon-clock"></i>2016-12-10</time>
 </a>
       
