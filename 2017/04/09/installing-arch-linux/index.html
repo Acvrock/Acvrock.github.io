@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" >
+  <title>通过 U 盘驱动安装 Arch Linux | 静宏的 blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="今天在一台老主机上安装了 Arch Linux，记录安装一下过程
+格式化 U 盘
+打开 Disk Utility 选择 U 盘点击 Erase，选择 MS-DOS(FAT),即格式为 FAT32 格式，点击确认，直到提示成功，点击 Unmount 按钮，取消挂载
+
+
+
+
+查看 U 盘盘符
+在 Terminal 下进行操作：
+12345678910111213141516171819$ diskut">
+<meta property="og:type" content="article">
+<meta property="og:title" content="通过 U 盘驱动安装 Arch Linux">
+<meta property="og:url" content="http://www.Acvrock.com/2017/04/09/installing-arch-linux/index.html">
+<meta property="og:site_name" content="静宏的 blog">
+<meta property="og:description" content="今天在一台老主机上安装了 Arch Linux，记录安装一下过程
+格式化 U 盘
+打开 Disk Utility 选择 U 盘点击 Erase，选择 MS-DOS(FAT),即格式为 FAT32 格式，点击确认，直到提示成功，点击 Unmount 按钮，取消挂载
+
+
+
+
+查看 U 盘盘符
+在 Terminal 下进行操作：
+12345678910111213141516171819$ diskut">
+<meta property="og:image" content="http://www.Acvrock.com/img/installing-arch-linux/QQ20170409-133222@2x.png">
+<meta property="og:image" content="http://www.Acvrock.com/img/installing-arch-linux/QQ20170409-133313@2x.png">
+<meta property="og:image" content="http://www.Acvrock.com/img/installing-arch-linux/QQ20170409-154534@2x.png">
+<meta property="og:image" content="http://www.Acvrock.com/img/installing-arch-linux/QQ20170409-154709@2x.png">
+<meta property="og:image" content="http://www.Acvrock.com/img/installing-arch-linux/faf2b2119313b07e4a6e86260fd7912396dd8cc9.jpg">
+<meta property="og:image" content="http://www.Acvrock.com/img/installing-arch-linux/e61190ef76c6a7ef6b447908fefaaf51f3de66ba.jpg">
+<meta property="og:image" content="http://www.Acvrock.com/img/installing-arch-linux/71cf3bc79f3df8dc08725cbfce11728b47102855.jpg">
+<meta property="og:image" content="http://www.Acvrock.com/img/installing-arch-linux/d8f9d72a6059252dbe5ccc2a379b033b5bb5b951.jpg">
+<meta property="og:image" content="http://www.Acvrock.com/img/installing-arch-linux/4ec2d5628535e5dd468d74f175c6a7efce1b627f.jpg">
+<meta property="og:image" content="http://www.Acvrock.com/img/installing-arch-linux/4610b912c8fcc3ce21a0191d9145d688d43f20b8.jpg">
+<meta property="og:image" content="http://www.Acvrock.com/img/installing-arch-linux/5fdf8db1cb134954b19c384a554e9258d1094a1a.jpg">
+<meta property="og:image" content="http://www.Acvrock.com/img/installing-arch-linux/a71ea8d3fd1f41345c4ed650261f95cad1c85ea7.jpg">
+<meta property="og:image" content="http://www.Acvrock.com/img/installing-arch-linux/3ac79f3df8dcd10060592b0f718b4710b8122fd3.jpg">
+<meta property="og:image" content="http://www.Acvrock.com/img/installing-arch-linux/c8177f3e6709c93da461dcd99c3df8dcd1005409.jpg">
+<meta property="og:image" content="http://www.Acvrock.com/img/installing-arch-linux/c8177f3e6709c93da434dcd99c3df8dcd00054de.jpg">
+<meta property="og:image" content="http://www.Acvrock.com/img/installing-arch-linux/2fdda3cc7cd98d108eb9d11f223fb80e7bec90ab.jpg">
+<meta property="og:image" content="http://www.Acvrock.com/img/installing-arch-linux/d31b0ef41bd5ad6e36a5b9c482cb39dbb6fd3c44.jpg">
+<meta property="og:updated_time" content="2017-04-09T09:10:24.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="通过 U 盘驱动安装 Arch Linux">
+<meta name="twitter:description" content="今天在一台老主机上安装了 Arch Linux，记录安装一下过程
+格式化 U 盘
+打开 Disk Utility 选择 U 盘点击 Erase，选择 MS-DOS(FAT),即格式为 FAT32 格式，点击确认，直到提示成功，点击 Unmount 按钮，取消挂载
+
+
+
+
+查看 U 盘盘符
+在 Terminal 下进行操作：
+12345678910111213141516171819$ diskut">
+<meta name="twitter:image" content="http://www.Acvrock.com/img/installing-arch-linux/QQ20170409-133222@2x.png">
+  
+    <link rel="alternative" href="/atom.xml" title="静宏的 blog" type="application/atom+xml">
+  
+  
+    <!-- <link rel="icon" href="//favicon.ico"> -->
+    <link rel="icon" href="/favicon.ico">
+  
+  <script src="/style.js"></script>
+</head>
+
+<body>
+  <div id="container">
+    <div class="left-col">
+      <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="/" class="profilepic">
+			
+			<img src="/develop-web.png" class="js-avatar show">
+			
+		</a>
+
+		<hgroup>
+		  <h1 class="header-author"><a href="/">静宏</a></h1>
+		</hgroup>
+
+		
+		<p class="header-subtitle">垂死病中惊卧起，谈笑风生又一年</p>
+		
+
+		<nav class="header-menu">
+			<ul>
+			
+			</ul>
+		</nav>
+		<nav class="header-smart-menu">
+	        
+    		
+    			
+    			<a class="js-smart-menu" data-idx="0" href="javascript:void(0)">所有文章</a>
+    			
+    			
+            
+    			
+    			<a class="js-smart-menu" data-idx="1" href="javascript:void(0)">标签</a>
+    			
+    			
+            
+    			
+    			<a class="js-smart-menu" data-idx="2" href="javascript:void(0)">关于我</a>
+    			
+    			
+            
+		</nav>
+		<nav class="header-nav">
+			<div class="social">
+				
+					<a class="github" target="_blank" href="https://github.com/Acvrock" title="github">github</a>
+		        
+					<a class="weibo" target="_blank" href="http://weibo.com/jinghong1994/" title="weibo">weibo</a>
+		        
+					<a class="twitter" target="_blank" href="https://twitter.com/li1215101" title="twitter">twitter</a>
+		        
+			</div>
+		</nav>
+	</header>		
+</div>
+
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"><i class="icon-list"></i></div>
+  		<h1 class="header-author js-mobile-header hide">静宏</h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<div class="profilepic">
+				
+					<img src="/develop-web.png" class="js-avatar show">
+				
+			</div>
+			<hgroup>
+			  <h1 class="header-author">静宏</h1>
+			</hgroup>
+			
+			<p class="header-subtitle">垂死病中惊卧起，谈笑风生又一年</p>
+			
+			<nav class="header-menu">
+				<ul>
+				
+				</ul>
+			</nav>
+			<nav class="header-nav">
+				<div class="social">
+					
+						<a class="github" target="_blank" href="https://github.com/Acvrock" title="github">github</a>
+			        
+						<a class="weibo" target="_blank" href="http://weibo.com/jinghong1994/" title="weibo">weibo</a>
+			        
+						<a class="twitter" target="_blank" href="https://twitter.com/li1215101" title="twitter">twitter</a>
+			        
+				</div>
+			</nav>
+		</header>				
+	</div>
+</nav>
+
+      <div class="body-wrap">
+        <article id="post-installing-arch-linux" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      通过 U 盘驱动安装 Arch Linux
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>今天在一台老主机上安装了 Arch Linux，记录安装一下过程</p>
+<h4>格式化 U 盘</h4>
+<p>打开 Disk Utility 选择 U 盘点击 Erase，选择 MS-DOS(FAT),即格式为 FAT32 格式，点击确认，直到提示成功，点击 Unmount 按钮，取消挂载
+<img src="/img/installing-arch-linux/QQ20170409-133222@2x.png" alt="">
+<img src="/img/installing-arch-linux/QQ20170409-133313@2x.png" alt="">
+<img src="/img/installing-arch-linux/QQ20170409-154534@2x.png" alt="">
+<img src="/img/installing-arch-linux/QQ20170409-154709@2x.png" alt=""></p>
+<h4>查看 U 盘盘符</h4>
+<p>在 Terminal 下进行操作：</p>
+<p><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line">$ diskutil list</div><div class="line">/dev/disk0 (internal, physical):</div><div class="line">   #:                       TYPE NAME                    SIZE       IDENTIFIER</div><div class="line">   0:      GUID_partition_scheme                        *251.0 GB   disk0</div><div class="line">   1:                        EFI EFI                     209.7 MB   disk0s1</div><div class="line">   2:          Apple_CoreStorage Macintosh HD            250.1 GB   disk0s2</div><div class="line">   3:                 Apple_Boot Recovery HD             650.1 MB   disk0s3</div><div class="line"></div><div class="line">/dev/disk1 (internal, virtual):</div><div class="line">   #:                       TYPE NAME                    SIZE       IDENTIFIER</div><div class="line">   0:                            Macintosh HD           +249.8 GB   disk1</div><div class="line">                                 Logical Volume on disk0s2</div><div class="line">                                 6EED22C6-6FD7-4444-AA83-A305369854DE</div><div class="line">                                 Unlocked Encrypted</div><div class="line"></div><div class="line">/dev/disk2 (external, physical):</div><div class="line">   #:                       TYPE NAME                    SIZE       IDENTIFIER</div><div class="line">   0:     FDisk_partition_scheme                        *8.0 GB     disk2</div><div class="line">   1:                 DOS_FAT_32 U                       8.0 GB     disk2s1</div></pre></td></tr></table></figure></p>
+<p>根据容量判断哪个盘是 U 盘，这里为 /dev/disk2</p>
+<h4>将下载的 iso 文件写入 U 盘</h4>
+<p><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">$ sudo dd if=/Users/moon/Downloads/archlinux-2017.04.01-x86_64.iso of=/dev/rdisk2 bs=1m;sync</div><div class="line">Password:</div><div class="line">478+0 records in</div><div class="line">478+0 records out</div><div class="line">501219328 bytes transferred in 93.303333 secs (5371934 bytes/sec)</div></pre></td></tr></table></figure></p>
+<p>此处注意在disk2 前加 <strong>r</strong>,等待结束，此时 U 盘已经处理完毕，插入需要安装的电脑进行安装，下面可以参考两个文档进行安装，一个是
+<a href="https://wiki.archlinux.org/index.php/Installation_guide" target="_blank" rel="external">arch wiki</a>，一个是<a href="http://jingyan.baidu.com/article/59a015e3a9170ef7948865f3.html" target="_blank" rel="external">百度经验的文档</a></p>
+<h4>开机选择 U 盘驱动，不同机器略有不同，我的机器是 F12 ,然后选中插入的 U 盘</h4>
+<p>下面使用百度的图，因为我的安装时忘记截图了</p>
+<p><img src="/img/installing-arch-linux/faf2b2119313b07e4a6e86260fd7912396dd8cc9.jpg" alt=""></p>
+<h4>选择 Boot Arch Linux(x86-64) 或者 Boot Arch Linux(i686)，我只有 Boot Arch Linux(x86-64)一个选项</h4>
+<p><img src="/img/installing-arch-linux/e61190ef76c6a7ef6b447908fefaaf51f3de66ba.jpg" alt=""></p>
+<h4>进入命令行界面，先检测网络是否连接，安装时需要网络</h4>
+<p>使用 <code>ping baidu.com</code> 进行测试，退出需要按 Ctrl+c 中断<br>
+<img src="/img/installing-arch-linux/71cf3bc79f3df8dc08725cbfce11728b47102855.jpg" alt=""></p>
+<h4>磁盘分区，格式化</h4>
+<p>输入 <code>lsblk</code> 查看硬件设备，根据容量判断哪个是硬盘，一般都是 sda
+<img src="/img/installing-arch-linux/d8f9d72a6059252dbe5ccc2a379b033b5bb5b951.jpg" alt=""></p>
+<p>输入 <code>fdisk /dev/sda</code> 对硬盘进行分区， fdisk 的各种命令请输入 m 进行查看，一般是用 p 查看分区表情况，用 d 删除分区，n 新建分区，w 保存分区，保存后退出<br>
+<img src="/img/installing-arch-linux/4ec2d5628535e5dd468d74f175c6a7efce1b627f.jpg" alt=""></p>
+<p>回到 shell 界面后输入 <code>mkfs.ext4 /dev/sda1</code> 进行格式化，格式化为 ext4 文件格式<br>
+<img src="/img/installing-arch-linux/4610b912c8fcc3ce21a0191d9145d688d43f20b8.jpg" alt=""></p>
+<h4>挂载硬盘</h4>
+<p>输入 <code>mount /dev/sda1 /mnt</code> 将分区挂载到 /mnt 上
+<img src="/img/installing-arch-linux/5fdf8db1cb134954b19c384a554e9258d1094a1a.jpg" alt=""></p>
+<h4>修改源</h4>
+<p>按照 <a href="https://wiki.archlinux.org/index.php/Installation_guide" target="_blank" rel="external">arch wiki</a> 的步骤，现在就可以进行系统安装了，但是为了加速安装，我们需要把安装源修改成国内地址。<br>
+步骤：输入 <code>vi /etc/pacman.d/mirrorslist</code> 打开文件<br>
+在命令模式下输入 <code>/163</code> 回车查找 163 的源，它的位置在首屏的十几行的位置<br>
+这时候输入 yy 进行复制，然后移动光标到第一行<br>
+输入 p 进行粘贴，然后保存退出，修改源完毕<br>
+再安装时就会优先取 163 源里的数据
+<img src="/img/installing-arch-linux/a71ea8d3fd1f41345c4ed650261f95cad1c85ea7.jpg" alt=""></p>
+<h4>安装</h4>
+<p>输入 <code>pacstrap /mnt base</code><br>
+<img src="/img/installing-arch-linux/3ac79f3df8dcd10060592b0f718b4710b8122fd3.jpg" alt=""></p>
+<p>安装完毕后，输入 <code>arch-chroot /mnt</code>,可能需要再输入 <code>sh</code> 接入 sh 环境<br>
+<img src="/img/installing-arch-linux/c8177f3e6709c93da461dcd99c3df8dcd1005409.jpg" alt=""></p>
+<h4>安装 grub</h4>
+<p>输入 <code>pacman -S grub</code><br>
+<img src="/img/installing-arch-linux/c8177f3e6709c93da434dcd99c3df8dcd00054de.jpg" alt=""></p>
+<h4>配置 grub</h4>
+<p>输入 <code>grub-install /dev/sda</code><br>
+<img src="/img/installing-arch-linux/2fdda3cc7cd98d108eb9d11f223fb80e7bec90ab.jpg" alt=""></p>
+<h4>配置 boot 文件</h4>
+<p>输入 <code>grub-mkconfig -o /boot/grub/grub.cfg</code><br>
+<img src="/img/installing-arch-linux/d31b0ef41bd5ad6e36a5b9c482cb39dbb6fd3c44.jpg" alt=""></p>
+<p>至此，全部操作完毕，输入 exit 退出，输入 reboot 重启</p>
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      <a href="/2017/04/09/installing-arch-linux/" class="archive-article-date">
+  	<time datetime="2017-04-09T04:03:12.000Z" itemprop="datePublished"><i class="icon-clock"></i>2017-04-09</time>
+</a>
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags"></i>
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Linux/">Linux</a></li></ul>
+	</div>
+
+      
+
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+  
+<nav id="article-nav">
+  
+  
+    <a href="/2017/01/08/abstain_weibo/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">如何摆脱对微博的依赖</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+
+
+
+
+
+
+<div class="duoshuo">
+	<!-- 多说评论框 start -->
+	<div class="ds-thread" data-thread-key="installing-arch-linux" data-title="通过 U 盘驱动安装 Arch Linux" data-url="http://www.Acvrock.com/2017/04/09/installing-arch-linux/"></div>
+	<!-- 多说评论框 end -->
+	<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+	<script type="text/javascript">
+	var duoshuoQuery = {short_name:"acvrock"};
+	(function() {
+		var ds = document.createElement('script');
+		ds.type = 'text/javascript';ds.async = true;
+		ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//blog.acvrock.com/js/src/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0] 
+		 || document.getElementsByTagName('body')[0]).appendChild(ds);
+	})();
+	</script>
+	<!-- 多说公共JS代码 end -->
+</div>
+
+
+
+
+
+      </div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+    	<div class="footer-left">
+    		&copy; 2017 静宏 <a href="http://www.miitbeian.gov.cn/">粤ICP备16064340号-1</a>
+    	</div>
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+      	<div class="footer-right">
+        本站总访问量<span id="busuanzi_value_site_pv"></span>次，本站访客数<span id="busuanzi_value_site_uv"></span>人次，本文总阅读量<span id="busuanzi_value_page_pv"></span>次
+   <a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia</a> by Litten
+      	</div>
+    </div>
+  </div>
+</footer>
+    </div>
+    <script>
+	var yiliaConfig = {
+		fancybox: true,
+		mathjax: true,
+		animate: true,
+		isHome: false,
+		isPost: true,
+		isArchive: false,
+		isTag: false,
+		isCategory: false,
+		open_in_new: false
+	}
+</script>
+
+<script src="/./main.js"></script>
+
+
+
+
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';                 
+    }       
+});
+</script>
+
+<script src="//cdn.bootcss.com/mathjax/2.7.0-beta.0/MathJax.js">
+</script>
+
+
+    
+<div class="tools-col">
+  <ul class="btn-wrap">
+    
+      <li class="chose" data-hook="tools-section-all"><span class="text">全部</span><i class="icon-book"></i></li>
+    
+    
+      <li data-hook="tools-section-tag"><span class="text">标签</span><i class="icon-price-tags"></i></li>
+    
+    
+    
+      <li data-hook="tools-section-me"><span class="text">我</span><i class="icon-smile"></i></li>
+    
+  </ul>
+  <div class="tools-wrap">
+    
+    	<section class="tools-section tools-section-all chose">
+    	</section>
+    
+
+    
+    	<section class="tools-section tools-section-tag">
+    			<div class="widget tagcloud" id="js-tagcloud">
+    				<a href="/tags/Android/" style="font-size: 13.33px;">Android</a> <a href="/tags/Centos/" style="font-size: 10px;">Centos</a> <a href="/tags/Cronolog/" style="font-size: 10px;">Cronolog</a> <a href="/tags/Error/" style="font-size: 10px;">Error</a> <a href="/tags/Exception/" style="font-size: 10px;">Exception</a> <a href="/tags/Hexo/" style="font-size: 10px;">Hexo</a> <a href="/tags/JVM/" style="font-size: 10px;">JVM</a> <a href="/tags/Java/" style="font-size: 16.67px;">Java</a> <a href="/tags/Linux/" style="font-size: 16.67px;">Linux</a> <a href="/tags/Log/" style="font-size: 10px;">Log</a> <a href="/tags/Nginx/" style="font-size: 10px;">Nginx</a> <a href="/tags/Redis/" style="font-size: 10px;">Redis</a> <a href="/tags/Shell/" style="font-size: 10px;">Shell</a> <a href="/tags/Spring/" style="font-size: 10px;">Spring</a> <a href="/tags/Tomcat/" style="font-size: 10px;">Tomcat</a> <a href="/tags/checkbox-padding兼容/" style="font-size: 10px;">checkbox padding兼容</a> <a href="/tags/log4j2/" style="font-size: 10px;">log4j2</a> <a href="/tags/总结/" style="font-size: 10px;">总结</a> <a href="/tags/读书笔记/" style="font-size: 20px;">读书笔记</a> <a href="/tags/－-总结/" style="font-size: 13.33px;">－ 总结</a>
+    			</div>
+    	</section>
+    
+
+    
+
+    
+    	<section class="tools-section tools-section-me">
+  	  	
+  	  		<div class="aboutme-wrap" id="js-aboutme">生命不息&lt;/br&gt;冲锋不止!</div>
+  	  	
+    	</section>
+    
+  </div>
+  
+</div>
+    <!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                      <div class="pswp__preloader__cut">
+                        <div class="pswp__preloader__donut"></div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div> 
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+  </div>
+</body>
+</html>
