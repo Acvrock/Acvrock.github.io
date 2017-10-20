@@ -126,6 +126,79 @@
       <div class="body-wrap">
         
   
+    <article id="post-fix_timeout_due_to_cpu_busy" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/11/20/fix_timeout_due_to_cpu_busy/">记一次 CPU 忙碌导致的超时</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>通过业务日志发现客户端调用某一远程服务时不时连接超时,导致部分业务请求受影响,以下记录了定位的过程<br>
+首先收集 thrift 代理日志,统计该服务超时情况,结果如下:</p>
+<p><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div></pre></td><td class="code"><pre><div class="line">**@ubuntu:/data/log/ServiceAgent_d$ zgrep &apos;time out&apos; ServiceAgent_d.log.*.gz |awk &apos;&#123;print $3,$7,$12&#125;&apos;|grep od</div><div class="line">11:11:20 od_getById ***.***.112.152_60008</div><div class="line">14:11:25 od_listByParam ***.***.112.152_60008</div><div class="line">19:11:25 od_getById ***.***.112.152_60008</div><div class="line">19:11:27 od_getById ***.***.112.152_60008</div><div class="line">00:12:02 od_ping ***.***.112.152_60008</div><div class="line">05:10:30 od_ping ***.***.112.152_60008</div><div class="line">05:11:37 od_ping ***.***.112.152_60008</div><div class="line">21:11:37 od_getById ***.***.112.152_60008</div><div class="line">21:11:49 od_listByParam ***.***.112.152_60008</div><div class="line">10:10:11 od_listByParam ***.***.112.152_60008</div><div class="line">11:11:31 od_listByParam ***.***.112.152_60008</div><div class="line">14:10:24 od_listByParam ***.***.112.152_60008</div><div class="line">14:11:34 od_getById ***.***.112.152_60008</div><div class="line">11:11:39 od_listByParam ***.***.112.152_60008</div><div class="line">13:11:39 od_listByParam ***.***.112.152_60008</div><div class="line">20:11:26 od_listByParam ***.***.112.152_60008</div><div class="line">21:11:33 od_listByPage ***.***.112.152_60008</div><div class="line">21:11:38 od_listByParam ***.***.112.152_60008</div><div class="line">10:11:43 od_listByParam ***.***.112.152_60008</div><div class="line">11:11:26 od_getById ***.***.112.152_60008</div><div class="line">14:11:36 od_getById ***.***.112.152_60008</div><div class="line">17:11:42 od_getById ***.***.112.152_60008</div><div class="line">11:10:10 od_listByParam ***.***.112.152_60008</div><div class="line">15:10:13 od_listByParam ***.***.112.152_60008</div><div class="line">19:11:26 od_listByParam ***.***.112.152_60008</div><div class="line">14:10:30 od_listByPage ***.***.112.152_60008 </div><div class="line">16:10:18 od_listByPage ***.***.112.152_60008</div><div class="line">20:10:30 od_listByParam ***.***.112.152_60008</div><div class="line">**@ubuntu:/data/log/ServiceAgent_d$</div></pre></td></tr></table></figure></p>
+<p>左右端详,可以发现以下特点:具有周期性,而且集中在 152 机器上,都是每个小时的10分钟左右出现<br>
+接下来查看机器运行情况:<br>
+<img src="/img/20171020201157.jpg" alt=""><br>
+可看到 CPU 也是有规律的升高.<br>
+通过应用部署架构已知该主机上有定时任务 task 类型的应用,所以初步怀疑是某些 task 进程有问题</p>
+<p>接下来进入该 152 机器,使用 <strong>top</strong> 命令观察 CPU,等待下一个周期,等到 11 分钟时,得到以下截图:
+<img src="/img/20171020201826.jpg" alt="">
+得知占用最大的程序为 gzip ,但是查不到 gzip 进行什么操作,无解<br>
+另辟蹊径,咨询运维得知:每小时的第 10 分钟,logrotate 会对日志进行压缩轮转,如下图:
+<img src="/img/20171020202253.jpg" alt=""><br>
+所以定位的重点就变成:是否是某些日志设置不当,导致 logrotate 异常<br>
+检查 logrotate 运行状态:<br>
+<code>grep 10-20 /var/lib/logrotate/status</code><br>
+<img src="/img/logrotatestatus.png" alt="">
+检查 logrotate 操作的文件大小<br>
+<code>grep 10-20 /var/lib/logrotate/status |awk -F '&quot;' '{print $2}'|xargs ls -alh</code><br>
+<img src="/img/logrotatesfilesize.png" alt="">
+倒数第二行,发现文件大小异常,检查日志文件所属程序,发现是遗留的 kafka 程序<br>
+解决方案:
+关闭它<br>
+观察日志,没有发现超时,问题解决</p>
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      <a href="/2017/11/20/fix_timeout_due_to_cpu_busy/" class="archive-article-date">
+  	<time datetime="2017-11-20T12:55:01.000Z" itemprop="datePublished"><i class="icon-clock"></i>2017-11-20</time>
+</a>
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags"></i>
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/CPU/">CPU</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/gzip/">gzip</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/logrotate/">logrotate</a></li></ul>
+	</div>
+
+      
+
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+
+
+
+
+
+
+
+
+
+  
     <article id="post-fix-sourcetree-authentication-failed" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -2164,7 +2237,7 @@ MathJax.Hub.Queue(function() {
     
     	<section class="tools-section tools-section-tag">
     			<div class="widget tagcloud" id="js-tagcloud">
-    				<a href="/tags/Android/" style="font-size: 13.33px;">Android</a> <a href="/tags/Centos/" style="font-size: 10px;">Centos</a> <a href="/tags/Cronolog/" style="font-size: 10px;">Cronolog</a> <a href="/tags/Error/" style="font-size: 10px;">Error</a> <a href="/tags/Exception/" style="font-size: 10px;">Exception</a> <a href="/tags/Hexo/" style="font-size: 10px;">Hexo</a> <a href="/tags/JVM/" style="font-size: 10px;">JVM</a> <a href="/tags/Java/" style="font-size: 16.67px;">Java</a> <a href="/tags/Linux/" style="font-size: 16.67px;">Linux</a> <a href="/tags/Log/" style="font-size: 10px;">Log</a> <a href="/tags/Nginx/" style="font-size: 10px;">Nginx</a> <a href="/tags/Redis/" style="font-size: 10px;">Redis</a> <a href="/tags/Shell/" style="font-size: 10px;">Shell</a> <a href="/tags/SourceTree/" style="font-size: 10px;">SourceTree</a> <a href="/tags/Spring/" style="font-size: 10px;">Spring</a> <a href="/tags/Subversion/" style="font-size: 10px;">Subversion</a> <a href="/tags/Tomcat/" style="font-size: 10px;">Tomcat</a> <a href="/tags/checkbox-padding兼容/" style="font-size: 10px;">checkbox padding兼容</a> <a href="/tags/git-svn/" style="font-size: 10px;">git svn</a> <a href="/tags/log4j2/" style="font-size: 10px;">log4j2</a> <a href="/tags/总结/" style="font-size: 10px;">总结</a> <a href="/tags/读书笔记/" style="font-size: 20px;">读书笔记</a> <a href="/tags/－-总结/" style="font-size: 13.33px;">－ 总结</a>
+    				<a href="/tags/Android/" style="font-size: 13.33px;">Android</a> <a href="/tags/CPU/" style="font-size: 10px;">CPU</a> <a href="/tags/Centos/" style="font-size: 10px;">Centos</a> <a href="/tags/Cronolog/" style="font-size: 10px;">Cronolog</a> <a href="/tags/Error/" style="font-size: 10px;">Error</a> <a href="/tags/Exception/" style="font-size: 10px;">Exception</a> <a href="/tags/Hexo/" style="font-size: 10px;">Hexo</a> <a href="/tags/JVM/" style="font-size: 10px;">JVM</a> <a href="/tags/Java/" style="font-size: 16.67px;">Java</a> <a href="/tags/Linux/" style="font-size: 16.67px;">Linux</a> <a href="/tags/Log/" style="font-size: 10px;">Log</a> <a href="/tags/Nginx/" style="font-size: 10px;">Nginx</a> <a href="/tags/Redis/" style="font-size: 10px;">Redis</a> <a href="/tags/Shell/" style="font-size: 10px;">Shell</a> <a href="/tags/SourceTree/" style="font-size: 10px;">SourceTree</a> <a href="/tags/Spring/" style="font-size: 10px;">Spring</a> <a href="/tags/Subversion/" style="font-size: 10px;">Subversion</a> <a href="/tags/Tomcat/" style="font-size: 10px;">Tomcat</a> <a href="/tags/checkbox-padding兼容/" style="font-size: 10px;">checkbox padding兼容</a> <a href="/tags/git-svn/" style="font-size: 10px;">git svn</a> <a href="/tags/gzip/" style="font-size: 10px;">gzip</a> <a href="/tags/log4j2/" style="font-size: 10px;">log4j2</a> <a href="/tags/logrotate/" style="font-size: 10px;">logrotate</a> <a href="/tags/总结/" style="font-size: 10px;">总结</a> <a href="/tags/读书笔记/" style="font-size: 20px;">读书笔记</a> <a href="/tags/－-总结/" style="font-size: 13.33px;">－ 总结</a>
     			</div>
     	</section>
     
