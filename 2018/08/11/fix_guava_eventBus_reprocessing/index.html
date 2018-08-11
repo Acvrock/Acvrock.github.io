@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" >
+  <title>定位 Guava EventBus 重复消费 | 静宏的 blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="问题描述
+我们在系统中使用 Guava 的 EventBus 进行代码解耦，一直运行良好，但是在某一次发版后，出现了消息重复消费的情况，示例代码如下:
+123456789AbstractListener.java //抽象父类public abstract class AbstractListener&amp;lt;T&amp;gt; implements InitializingBean &amp;#123;	@Ove">
+<meta property="og:type" content="article">
+<meta property="og:title" content="定位 Guava EventBus 重复消费">
+<meta property="og:url" content="http://www.Acvrock.com/2018/08/11/fix_guava_eventBus_reprocessing/index.html">
+<meta property="og:site_name" content="静宏的 blog">
+<meta property="og:description" content="问题描述
+我们在系统中使用 Guava 的 EventBus 进行代码解耦，一直运行良好，但是在某一次发版后，出现了消息重复消费的情况，示例代码如下:
+123456789AbstractListener.java //抽象父类public abstract class AbstractListener&amp;lt;T&amp;gt; implements InitializingBean &amp;#123;	@Ove">
+<meta property="og:updated_time" content="2018-08-11T14:13:28.593Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="定位 Guava EventBus 重复消费">
+<meta name="twitter:description" content="问题描述
+我们在系统中使用 Guava 的 EventBus 进行代码解耦，一直运行良好，但是在某一次发版后，出现了消息重复消费的情况，示例代码如下:
+123456789AbstractListener.java //抽象父类public abstract class AbstractListener&amp;lt;T&amp;gt; implements InitializingBean &amp;#123;	@Ove">
+  
+    <link rel="alternative" href="/atom.xml" title="静宏的 blog" type="application/atom+xml">
+  
+  
+    <!-- <link rel="icon" href="//favicon.ico"> -->
+    <link rel="icon" href="/favicon.ico">
+  
+  <script src="/style.js"></script>
+</head>
+
+<body>
+  <div id="container">
+    <div class="left-col">
+      <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="/" class="profilepic">
+			
+			<img src="/develop-web.png" class="js-avatar show">
+			
+		</a>
+
+		<hgroup>
+		  <h1 class="header-author"><a href="/">静宏</a></h1>
+		</hgroup>
+
+		
+		<p class="header-subtitle">垂死病中惊卧起，谈笑风生又一年</p>
+		
+
+		<nav class="header-menu">
+			<ul>
+			
+			</ul>
+		</nav>
+		<nav class="header-smart-menu">
+	        
+    		
+    			
+    			<a class="js-smart-menu" data-idx="0" href="javascript:void(0)">所有文章</a>
+    			
+    			
+            
+    			
+    			<a class="js-smart-menu" data-idx="1" href="javascript:void(0)">标签</a>
+    			
+    			
+            
+    			
+    			<a class="js-smart-menu" data-idx="2" href="javascript:void(0)">关于我</a>
+    			
+    			
+            
+		</nav>
+		<nav class="header-nav">
+			<div class="social">
+				
+					<a class="github" target="_blank" href="https://github.com/Acvrock" title="github">github</a>
+		        
+					<a class="weibo" target="_blank" href="http://weibo.com/jinghong1994/" title="weibo">weibo</a>
+		        
+					<a class="twitter" target="_blank" href="https://twitter.com/li1215101" title="twitter">twitter</a>
+		        
+			</div>
+		</nav>
+	</header>		
+</div>
+
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"><i class="icon-list"></i></div>
+  		<h1 class="header-author js-mobile-header hide">静宏</h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<div class="profilepic">
+				
+					<img src="/develop-web.png" class="js-avatar show">
+				
+			</div>
+			<hgroup>
+			  <h1 class="header-author">静宏</h1>
+			</hgroup>
+			
+			<p class="header-subtitle">垂死病中惊卧起，谈笑风生又一年</p>
+			
+			<nav class="header-menu">
+				<ul>
+				
+				</ul>
+			</nav>
+			<nav class="header-nav">
+				<div class="social">
+					
+						<a class="github" target="_blank" href="https://github.com/Acvrock" title="github">github</a>
+			        
+						<a class="weibo" target="_blank" href="http://weibo.com/jinghong1994/" title="weibo">weibo</a>
+			        
+						<a class="twitter" target="_blank" href="https://twitter.com/li1215101" title="twitter">twitter</a>
+			        
+				</div>
+			</nav>
+		</header>				
+	</div>
+</nav>
+
+      <div class="body-wrap">
+        <article id="post-fix_guava_eventBus_reprocessing" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      定位 Guava EventBus 重复消费
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3>问题描述</h3>
+<p>我们在系统中使用 Guava 的 EventBus 进行代码解耦，一直运行良好，但是在某一次发版后，出现了消息重复消费的情况，示例代码如下:</p>
+<p><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">AbstractListener.java <span class="comment">//抽象父类</span></div><div class="line"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">AbstractListener</span>&lt;<span class="title">T</span>&gt; <span class="keyword">implements</span> <span class="title">InitializingBean</span> </span>&#123;</div><div class="line">	<span class="meta">@Override</span></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">afterPropertiesSet</span><span class="params">()</span> </span>&#123;  <span class="comment">//系统初始化时进行消费者注册</span></div><div class="line">		GuavaEventBusFactory.getDefault().eventBus().register(<span class="keyword">this</span>);</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">protected</span> <span class="keyword">abstract</span> <span class="keyword">void</span> <span class="title">onEvent</span><span class="params">(T t)</span> <span class="keyword">throws</span> Exception</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">CallNotifyListener.java <span class="comment">//具体业务类，对事件进行消费</span></div><div class="line"><span class="meta">@Component</span></div><div class="line"><span class="meta">@Lazy</span>(<span class="keyword">false</span>)</div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">CallNotifyListener</span> <span class="keyword">extends</span> <span class="title">AbstractListener</span>&lt;<span class="title">CallBack</span>&gt; </span>&#123;</div><div class="line">	Logger logger = LoggerFactory.getLogger(CallNotifyListener.class);</div><div class="line"></div><div class="line">	<span class="meta">@Subscribe</span></div><div class="line">	<span class="meta">@Override</span></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onEvent</span><span class="params">(CallBack event)</span> <span class="keyword">throws</span> Exception </span>&#123;</div><div class="line">		logger.info(<span class="string">"CallNotifyListener onEvent :&#123;&#125;,&#123;&#125;"</span>, event.getAppid(),event);</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">ScheduledTasks.java <span class="comment">//事件生产者</span></div><div class="line"><span class="meta">@Component</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ScheduledTasks</span> </span>&#123;</div><div class="line">	Logger logger = LoggerFactory.getLogger(ScheduledTasks.class);</div><div class="line"></div><div class="line">	<span class="meta">@Scheduled</span>(fixedRate = <span class="number">2000</span>)</div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">scheduleTaskWithFixedRate</span><span class="params">()</span> </span>&#123;</div><div class="line">		logger.info(<span class="string">"send msg - &#123;&#125;"</span>,<span class="keyword">new</span> Date());</div><div class="line">		CallBack callBack = <span class="keyword">new</span> CallBack(<span class="number">1</span>,System.currentTimeMillis());</div><div class="line">		GuavaEventBusFactory.getDefault().eventBus().post(callBack);</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>预期执行情况：
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">2018-08-11 20:49:22.728  INFO 27619 --- [           main] c.a.eventbus.EventBusTestApplication     : Started EventBusTestApplication in 1.476 seconds (JVM running for 1.848)</div><div class="line">2018-08-11 20:49:24.724  INFO 27619 --- [pool-2-thread-1] com.acvrock.eventbus.ScheduledTasks      : send msg - Sat Aug 11 20:49:24 CST 2018</div><div class="line">2018-08-11 20:49:24.725  INFO 27619 --- [pool-1-thread-2] com.acvrock.eventbus.CallNotifyListener  : CallNotifyListener onEvent :1533991764724,CallBack&#123;chid=1, appid=1533991764724&#125;</div><div class="line">2018-08-11 20:49:26.726  INFO 27619 --- [pool-2-thread-1] com.acvrock.eventbus.ScheduledTasks      : send msg - Sat Aug 11 20:49:26 CST 2018</div><div class="line">2018-08-11 20:49:26.727  INFO 27619 --- [pool-1-thread-3] com.acvrock.eventbus.CallNotifyListener  : CallNotifyListener onEvent :1533991766727,CallBack&#123;chid=1, appid=1533991766727&#125;</div></pre></td></tr></table></figure></p>
+<p>实际执行情况：
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">2018-08-11 20:51:20.279  INFO 27674 --- [           main] c.a.eventbus.EventBusTestApplication     : Started EventBusTestApplication in 1.062 seconds (JVM running for 1.442)</div><div class="line">2018-08-11 20:51:22.271  INFO 27674 --- [pool-2-thread-1] com.acvrock.eventbus.ScheduledTasks      : send msg - Sat Aug 11 20:51:22 CST 2018</div><div class="line">2018-08-11 20:51:22.272  INFO 27674 --- [pool-1-thread-3] com.acvrock.eventbus.CallNotifyListener  : CallNotifyListener onEvent :1533991882271,CallBack&#123;chid=1, appid=1533991882271&#125;</div><div class="line">2018-08-11 20:51:22.272  INFO 27674 --- [pool-1-thread-4] com.acvrock.eventbus.CallNotifyListener  : CallNotifyListener onEvent :1533991882271,CallBack&#123;chid=1, appid=1533991882271&#125;</div><div class="line">2018-08-11 20:51:24.275  INFO 27674 --- [pool-2-thread-1] com.acvrock.eventbus.ScheduledTasks      : send msg - Sat Aug 11 20:51:24 CST 2018</div><div class="line">2018-08-11 20:51:24.275  INFO 27674 --- [pool-1-thread-2] com.acvrock.eventbus.CallNotifyListener  : CallNotifyListener onEvent :1533991884275,CallBack&#123;chid=1, appid=1533991884275&#125;</div><div class="line">2018-08-11 20:51:24.275  INFO 27674 --- [pool-1-thread-5] com.acvrock.eventbus.CallNotifyListener  : CallNotifyListener onEvent :1533991884275,CallBack&#123;chid=1, appid=1533991884275&#125;</div></pre></td></tr></table></figure></p>
+<p>可以看到消费者对事件消费了两次，但是通过检查代码发现并没有相关的改动，机器环境也没有变动。<br>
+经过一番定位后发现是编译机器 JDK 版本升级到 JDK 8，新版 javac 编译后字节码有变动。<br>
+导致相同代码和环境下出现了不同的行为。</p>
+<h3>定位过程：</h3>
+<p>对代码调用进行跟踪，先从 EventBus.post 方法看起</p>
+<p><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">post</span><span class="params">(Object event)</span> </span>&#123;</div><div class="line">    Set&lt;Class&lt;?&gt;&gt; dispatchTypes = flattenHierarchy(event.getClass());</div><div class="line"></div><div class="line">    <span class="keyword">boolean</span> dispatched = <span class="keyword">false</span>;</div><div class="line">    <span class="keyword">for</span> (Class&lt;?&gt; eventType : dispatchTypes) &#123;</div><div class="line">      subscribersByTypeLock.readLock().lock();</div><div class="line">      <span class="keyword">try</span> &#123;</div><div class="line">        Set&lt;EventSubscriber&gt; wrappers = subscribersByType.get(eventType);</div><div class="line"></div><div class="line">        <span class="keyword">if</span> (!wrappers.isEmpty()) &#123;</div><div class="line">          dispatched = <span class="keyword">true</span>;</div><div class="line">          <span class="keyword">for</span> (EventSubscriber wrapper : wrappers) &#123;</div><div class="line">            enqueueEvent(event, wrapper);</div><div class="line">          &#125;</div><div class="line">        &#125;</div><div class="line">      &#125; <span class="keyword">finally</span> &#123;</div><div class="line">        subscribersByTypeLock.readLock().unlock();</div><div class="line">      &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">if</span> (!dispatched &amp;&amp; !(event <span class="keyword">instanceof</span> DeadEvent)) &#123;</div><div class="line">      post(<span class="keyword">new</span> DeadEvent(<span class="keyword">this</span>, event));</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    dispatchQueuedEvents();</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>debug 时发现在 JDK 7 环境下，subscribersByType.get(eventType) 只能获取到一个 EventSubscriber 对象，即：onEvent(CallBack event)。<br>
+而在 JDK 8 环境下，subscribersByType.get(eventType) 的确能够获取到两个 EventSubscriber 对象，分别是：onEvent(CallBack event)和onEvent(Object o)，
+导致 enqueueEvent 了两次<br>
+subscribersByType 对象是一个类似 Map 结构，用于存储 EventSubscriber 对象，初始化数据的位置在 EventBus.register中：</p>
+<p><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">register</span><span class="params">(Object object)</span> </span>&#123;</div><div class="line">   Multimap&lt;Class&lt;?&gt;, EventSubscriber&gt; methodsInListener =</div><div class="line">       finder.findAllSubscribers(object);</div><div class="line">   subscribersByTypeLock.writeLock().lock();</div><div class="line">   <span class="keyword">try</span> &#123;</div><div class="line">     subscribersByType.putAll(methodsInListener);</div><div class="line">   &#125; <span class="keyword">finally</span> &#123;</div><div class="line">     subscribersByTypeLock.writeLock().unlock();</div><div class="line">   &#125;</div><div class="line"> &#125;</div></pre></td></tr></table></figure></p>
+<p>这里 findAllSubscribers 的实现是在 AnnotatedSubscriberFinder 类中，逻辑比较简单，先调用  getAnnotatedMethods(clazz) 获取类中有 @Subscribe 注解的方法列表，然后实例化成 EventSubscriber 对象，存进 methodsInListener 并返回。<br>
+JDK 7 环境下 getAnnotatedMethods(clazz) 返回了 onEvent(CallBack event) 方法<br>
+JDK 8 环境下 getAnnotatedMethods(clazz) 返回了 onEvent(CallBack event) 方法和 onEvent(Object o) 方法，但是 onEvent(Object o) 不是我们定义的方法，而是 JDK 实现泛型时生成的桥方法，可以看成是在父类中定义的 onEvent(T t) 擦除泛型转换而来，并没有带 @Subscribe</p>
+<p><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> Multimap&lt;Class&lt;?&gt;, EventSubscriber&gt; findAllSubscribers(Object listener) &#123;</div><div class="line">  Multimap&lt;Class&lt;?&gt;, EventSubscriber&gt; methodsInListener = HashMultimap.create();</div><div class="line">  Class&lt;?&gt; clazz = listener.getClass();</div><div class="line">  <span class="keyword">for</span> (Method method : getAnnotatedMethods(clazz)) &#123;</div><div class="line">    Class&lt;?&gt;[] parameterTypes = method.getParameterTypes();</div><div class="line">    Class&lt;?&gt; eventType = parameterTypes[<span class="number">0</span>];</div><div class="line">    EventSubscriber subscriber = makeSubscriber(listener, method);</div><div class="line">    methodsInListener.put(eventType, subscriber);</div><div class="line">  &#125;</div><div class="line">  <span class="keyword">return</span> methodsInListener;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>getAnnotatedMethods(clazz) 方法中使用了 LoadingCache 缓存，最后获取注解的方法是：getAnnotatedMethodsInternal</p>
+<p><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> ImmutableList&lt;Method&gt; <span class="title">getAnnotatedMethodsInternal</span><span class="params">(Class&lt;?&gt; clazz)</span> </span>&#123;</div><div class="line">   Set&lt;? extends Class&lt;?&gt;&gt; supers = TypeToken.of(clazz).getTypes().rawTypes();</div><div class="line">   Map&lt;MethodIdentifier, Method&gt; identifiers = Maps.newHashMap();</div><div class="line">   <span class="keyword">for</span> (Class&lt;?&gt; superClazz : supers) &#123;</div><div class="line">     <span class="keyword">for</span> (Method superClazzMethod : superClazz.getMethods()) &#123;</div><div class="line">       <span class="keyword">if</span> (superClazzMethod.isAnnotationPresent(Subscribe.class)) &#123;</div><div class="line">         Class&lt;?&gt;[] parameterTypes = superClazzMethod.getParameterTypes();</div><div class="line">         <span class="keyword">if</span> (parameterTypes.length != <span class="number">1</span>) &#123;</div><div class="line">           <span class="keyword">throw</span> <span class="keyword">new</span> IllegalArgumentException(<span class="string">"Method "</span> + superClazzMethod</div><div class="line">               + <span class="string">" has @Subscribe annotation, but requires "</span> + parameterTypes.length</div><div class="line">               + <span class="string">" arguments.  Event subscriber methods must require a single argument."</span>);</div><div class="line">         &#125;</div><div class="line">         </div><div class="line">         MethodIdentifier ident = <span class="keyword">new</span> MethodIdentifier(superClazzMethod);</div><div class="line">         <span class="keyword">if</span> (!identifiers.containsKey(ident)) &#123;</div><div class="line">           identifiers.put(ident, superClazzMethod);</div><div class="line">         &#125;</div><div class="line">       &#125;</div><div class="line">     &#125;</div><div class="line">   &#125;</div><div class="line">   <span class="keyword">return</span> ImmutableList.copyOf(identifiers.values());</div><div class="line"> &#125;</div></pre></td></tr></table></figure></p>
+<p>这里关键的一句判断是 superClazzMethod.isAnnotationPresent(Subscribe.class)，isAnnotationPresent是 JDK reflect 包中的方法，经过调试，发现在 JDK 7 中，</p>
+<p><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">onEvent(CallBack event) 方法返回 true，</div><div class="line">onEvent(Object o) 方法返回 false，</div></pre></td></tr></table></figure></p>
+<p>而在 JDK 8 中，</p>
+<p><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">onEvent(CallBack event) 方法返回 true，</div><div class="line">onEvent(Object o) 方法返回 true。</div></pre></td></tr></table></figure></p>
+<p>导致返回了 onEvent(CallBack event) 和 onEvent(Object o)，并初始化出两个 EventSubscriber。</p>
+<h3>原因</h3>
+<p>对比两个版本 javac 编译出来的字节码</p>
+<p>JDK 7 版本</p>
+<p><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div></pre></td><td class="code"><pre><div class="line"> g6763$ javap -v  CallNotifyListener.class</div><div class="line">...</div><div class="line">public class com.acvrock.eventbus.CallNotifyListener extends com.acvrock.eventbus.AbstractListener&lt;com.acvrock.eventbus.CallBack&gt;</div><div class="line">  minor version: 0</div><div class="line">  major version: 51</div><div class="line">  flags: ACC_PUBLIC, ACC_SUPER</div><div class="line">Constant pool:</div><div class="line">   ...</div><div class="line">  #26 = Utf8               RuntimeVisibleAnnotations</div><div class="line">  #27 = Utf8               Lcom/google/common/eventbus/Subscribe;</div><div class="line">  #28 = Utf8               (Ljava/lang/Object;)V</div><div class="line">  ...</div><div class="line">&#123;</div><div class="line">  ...</div><div class="line"></div><div class="line">  public void onEvent(com.acvrock.eventbus.CallBack) throws java.lang.Exception;</div><div class="line">    ...</div><div class="line">    Exceptions:</div><div class="line">      throws java.lang.Exception</div><div class="line">    RuntimeVisibleAnnotations:</div><div class="line">      0: #27()</div><div class="line"></div><div class="line">  public void onEvent(java.lang.Object) throws java.lang.Exception;</div><div class="line">    ...</div><div class="line">    Exceptions:</div><div class="line">      throws java.lang.Exception</div><div class="line">&#125;</div><div class="line">...</div></pre></td></tr></table></figure></p>
+<p>第一个方法 onEvent(com.acvrock.guavatest.CallBack) 有一个 <code>#27</code> Subscribe 运行时注解
+第二个方法 onEvent(java.lang.Object) 没有带 RuntimeVisibleAnnotations</p>
+<p>JDK 8 版本</p>
+<p><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div></pre></td><td class="code"><pre><div class="line">g6763$ javap -v  CallNotifyListener.class </div><div class="line">...</div><div class="line">public class com.acvrock.eventbus.CallNotifyListener extends com.acvrock.eventbus.AbstractListener&lt;com.acvrock.eventbus.CallBack&gt;</div><div class="line">  minor version: 0</div><div class="line">  major version: 51</div><div class="line">  flags: ACC_PUBLIC, ACC_SUPER</div><div class="line">Constant pool:</div><div class="line">  ...</div><div class="line">  #26 = Utf8               RuntimeVisibleAnnotations</div><div class="line">  #27 = Utf8               Lcom/google/common/eventbus/Subscribe;</div><div class="line">  #28 = Utf8               (Ljava/lang/Object;)V</div><div class="line">  ...</div><div class="line">  </div><div class="line">&#123;</div><div class="line">  ...</div><div class="line">  </div><div class="line">  public void onEvent(com.acvrock.eventbus.CallBack) throws java.lang.Exception;</div><div class="line">    ...</div><div class="line">    Exceptions:</div><div class="line">      throws java.lang.Exception</div><div class="line">    RuntimeVisibleAnnotations:</div><div class="line">      0: #27()</div><div class="line"></div><div class="line">  public void onEvent(java.lang.Object) throws java.lang.Exception;</div><div class="line">    ...</div><div class="line">    Exceptions:</div><div class="line">      throws java.lang.Exception</div><div class="line">    RuntimeVisibleAnnotations:</div><div class="line">      0: #27()</div><div class="line">&#125;</div><div class="line">...</div></pre></td></tr></table></figure></p>
+<p>两个方法都有 运行时注解  <code>#27()</code>，也就是 <code>Subscribe</code><br>
+在网上 <a href="https://bugs.java.com/bugdatabase/view_bug.do?bug_id=8029563" target="_blank" rel="external">JDK-8029563 : Method.getAnnotations() changed its return value in JDK 8.</a> 这个描述和我们发现的问题是一致的<br>
+导致这一变动的是这个调整
+<a href="https://bugs.java.com/view_bug.do?bug_id=JDK-6695379" target="_blank" rel="external">JDK-6695379 : Copy method annotations and parameter annotations to synthetic bridge methods</a>，
+javac 实现了在编译时，拷贝方法和参数上的注解到桥方法上，也就是 onEvent(java.lang.Object)上，在 JDK 7u80 和 JDK 8b94 后生效</p>
+<h3>guava 如何解决</h3>
+<p>在 guava 18 中就已经解决了这个问题，代码如下：</p>
+<p><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> ImmutableList&lt;Method&gt; <span class="title">getAnnotatedMethodsInternal</span><span class="params">(Class&lt;?&gt; clazz)</span> </span>&#123;</div><div class="line">    Set&lt;? extends Class&lt;?&gt;&gt; supers = TypeToken.of(clazz).getTypes().rawTypes();</div><div class="line">    Map&lt;MethodIdentifier, Method&gt; identifiers = Maps.newHashMap();</div><div class="line">    <span class="keyword">for</span> (Class&lt;?&gt; superClazz : supers) &#123;</div><div class="line">      <span class="keyword">for</span> (Method superClazzMethod : superClazz.getMethods()) &#123;</div><div class="line">        <span class="keyword">if</span> (superClazzMethod.isAnnotationPresent(Subscribe.class)</div><div class="line">            &amp;&amp; !superClazzMethod.isBridge()) &#123;</div><div class="line">          Class&lt;?&gt;[] parameterTypes = superClazzMethod.getParameterTypes();</div><div class="line">          <span class="keyword">if</span> (parameterTypes.length != <span class="number">1</span>) &#123;</div><div class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> IllegalArgumentException(<span class="string">"Method "</span> + superClazzMethod</div><div class="line">                + <span class="string">" has @Subscribe annotation, but requires "</span> + parameterTypes.length</div><div class="line">                + <span class="string">" arguments.  Event subscriber methods must require a single argument."</span>);</div><div class="line">          &#125;</div><div class="line"></div><div class="line">          MethodIdentifier ident = <span class="keyword">new</span> MethodIdentifier(superClazzMethod);</div><div class="line">          <span class="keyword">if</span> (!identifiers.containsKey(ident)) &#123;</div><div class="line">            identifiers.put(ident, superClazzMethod);</div><div class="line">          &#125;</div><div class="line">        &#125;</div><div class="line">      &#125;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> ImmutableList.copyOf(identifiers.values());</div><div class="line">  &#125;</div></pre></td></tr></table></figure></p>
+<p>判断了方法有 Subscribe 注解并且不是桥方法才认为是 subscribe 方法,对应的代码提交记录：
+<a href="https://github.com/google/guava/commit/32d7dc732dfee93c82942e2d776adbbc02bd85ba#diff-e3fca3176dda68793f07e756ca2f412c" target="_blank" rel="external">Fix EventBus to not include bridge methods when registering subscribe</a><br>
+真是一个摸不着头脑的 bug</p>
+<h4>参考</h4>
+<p>关于桥方法可以参考
+<a href="https://docs.oracle.com/javase/tutorial/java/generics/bridgeMethods.html" target="_blank" rel="external">Effects of Type Erasure and Bridge Methods</a><br>
+示例代码<a href="https://github.com/Acvrock/Exercise-code/tree/master/eventbusTest" target="_blank" rel="external">Exercise-code/eventbusTest</a></p>
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      <a href="/2018/08/11/fix_guava_eventBus_reprocessing/" class="archive-article-date">
+  	<time datetime="2018-08-11T06:54:38.000Z" itemprop="datePublished"><i class="icon-clock"></i>2018-08-11</time>
+</a>
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags"></i>
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/EventBus/">EventBus</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Guava/">Guava</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/JDK-8/">JDK 8</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Java/">Java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Method-getAnnotations/">Method.getAnnotations()</a></li></ul>
+	</div>
+
+      
+
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+  
+<nav id="article-nav">
+  
+  
+    <a href="/2018/01/17/20180117_2017-2018/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">静宏的 2017 -&gt; 2018</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+
+
+
+
+
+
+<div class="duoshuo">
+	<!-- 多说评论框 start -->
+	<div class="ds-thread" data-thread-key="fix_guava_eventBus_reprocessing" data-title="定位 Guava EventBus 重复消费" data-url="http://www.Acvrock.com/2018/08/11/fix_guava_eventBus_reprocessing/"></div>
+	<!-- 多说评论框 end -->
+	<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+	<script type="text/javascript">
+	var duoshuoQuery = {short_name:"acvrock"};
+	(function() {
+		var ds = document.createElement('script');
+		ds.type = 'text/javascript';ds.async = true;
+		ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//blog.acvrock.com/js/src/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0] 
+		 || document.getElementsByTagName('body')[0]).appendChild(ds);
+	})();
+	</script>
+	<!-- 多说公共JS代码 end -->
+</div>
+
+
+
+
+
+      </div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+    	<div class="footer-left">
+    		&copy; 2018 静宏 <a href="http://www.miitbeian.gov.cn/">粤ICP备16064340号-1</a>
+    	</div>
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+      	<div class="footer-right">
+        本站总访问量<span id="busuanzi_value_site_pv"></span>次，本站访客数<span id="busuanzi_value_site_uv"></span>人次，本文总阅读量<span id="busuanzi_value_page_pv"></span>次
+   <a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia</a> by Litten
+      	</div>
+    </div>
+  </div>
+</footer>
+    </div>
+    <script>
+	var yiliaConfig = {
+		fancybox: true,
+		mathjax: true,
+		animate: true,
+		isHome: false,
+		isPost: true,
+		isArchive: false,
+		isTag: false,
+		isCategory: false,
+		open_in_new: false
+	}
+</script>
+
+<script src="/./main.js"></script>
+
+
+
+
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';                 
+    }       
+});
+</script>
+
+<script src="//cdn.bootcss.com/mathjax/2.7.0-beta.0/MathJax.js">
+</script>
+
+
+    
+<div class="tools-col">
+  <ul class="btn-wrap">
+    
+      <li class="chose" data-hook="tools-section-all"><span class="text">全部</span><i class="icon-book"></i></li>
+    
+    
+      <li data-hook="tools-section-tag"><span class="text">标签</span><i class="icon-price-tags"></i></li>
+    
+    
+    
+      <li data-hook="tools-section-me"><span class="text">我</span><i class="icon-smile"></i></li>
+    
+  </ul>
+  <div class="tools-wrap">
+    
+    	<section class="tools-section tools-section-all chose">
+    	</section>
+    
+
+    
+    	<section class="tools-section tools-section-tag">
+    			<div class="widget tagcloud" id="js-tagcloud">
+    				<a href="/tags/Android/" style="font-size: 12.5px;">Android</a> <a href="/tags/CPU/" style="font-size: 10px;">CPU</a> <a href="/tags/Centos/" style="font-size: 10px;">Centos</a> <a href="/tags/Cronolog/" style="font-size: 10px;">Cronolog</a> <a href="/tags/Error/" style="font-size: 10px;">Error</a> <a href="/tags/EventBus/" style="font-size: 10px;">EventBus</a> <a href="/tags/Exception/" style="font-size: 10px;">Exception</a> <a href="/tags/Guava/" style="font-size: 10px;">Guava</a> <a href="/tags/Hexo/" style="font-size: 10px;">Hexo</a> <a href="/tags/JDK-8/" style="font-size: 10px;">JDK 8</a> <a href="/tags/JVM/" style="font-size: 10px;">JVM</a> <a href="/tags/Java/" style="font-size: 17.5px;">Java</a> <a href="/tags/Linux/" style="font-size: 15px;">Linux</a> <a href="/tags/Log/" style="font-size: 10px;">Log</a> <a href="/tags/Method-getAnnotations/" style="font-size: 10px;">Method.getAnnotations()</a> <a href="/tags/Nginx/" style="font-size: 10px;">Nginx</a> <a href="/tags/Redis/" style="font-size: 10px;">Redis</a> <a href="/tags/Shell/" style="font-size: 10px;">Shell</a> <a href="/tags/SourceTree/" style="font-size: 10px;">SourceTree</a> <a href="/tags/Spring/" style="font-size: 10px;">Spring</a> <a href="/tags/Subversion/" style="font-size: 10px;">Subversion</a> <a href="/tags/Tomcat/" style="font-size: 10px;">Tomcat</a> <a href="/tags/checkbox-padding兼容/" style="font-size: 10px;">checkbox padding兼容</a> <a href="/tags/git-svn/" style="font-size: 10px;">git svn</a> <a href="/tags/gzip/" style="font-size: 10px;">gzip</a> <a href="/tags/log4j2/" style="font-size: 10px;">log4j2</a> <a href="/tags/logrotate/" style="font-size: 10px;">logrotate</a> <a href="/tags/总结/" style="font-size: 17.5px;">总结</a> <a href="/tags/读书笔记/" style="font-size: 20px;">读书笔记</a>
+    			</div>
+    	</section>
+    
+
+    
+
+    
+    	<section class="tools-section tools-section-me">
+  	  	
+  	  		<div class="aboutme-wrap" id="js-aboutme">生命不息&lt;/br&gt;冲锋不止!</div>
+  	  	
+    	</section>
+    
+  </div>
+  
+</div>
+    <!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                      <div class="pswp__preloader__cut">
+                        <div class="pswp__preloader__donut"></div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div> 
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+  </div>
+</body>
+</html>
