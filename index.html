@@ -271,6 +271,289 @@
 
 
   
+    <article id="post-20220719_sre" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2022/07/19/20220719_sre/">后端服务团队的 SRE 运维制度</a>
+    </h1>
+  
+
+        
+        <a href="/2022/07/19/20220719_sre/" class="archive-article-date">
+  	<time datetime="2022-07-19T08:03:22.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2022-07-19</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1>前言</h1>
+<p>在SRE领域，有两个指标</p>
+<ul>
+<li>MTBF，Mean Time Between Failure，平均故障时间间隔，<strong>MTBF系统正常运行的阶段</strong></li>
+<li>MTTR，Mean Time To Repair， 故障平均修复时间，<strong>MTTR则意味着系统故障状态</strong></li>
+</ul>
+<p><strong>MTTR 故障是不可避免的</strong>，我们指定运维制度的目标，目的是为了提高 MTBF时间，<strong>减低MTTR时间</strong></p>
+<p>MTTR又分四个指标</p>
+<ul>
+<li>MTTI<strong>平均故障发现时间</strong>，从故障实际发生，到我们真正开始响应时间</li>
+<li>MTTK<strong>平均故障认知时间</strong>，根因定位定位时间</li>
+<li>MTTF<strong>平均故障解决时间</strong>，根据根因，采取措施恢复业务为止</li>
+<li>MTTV平均故障修复验证时间，故障解决后，通过验证确认业务真正恢复所用时间</li>
+</ul>
+<p>如何降低MTTI<strong>平均故障发现时间</strong>，我们通过值班制度保障</p>
+<p>如何降低MTTK <strong>平均故障认知时间，MTTF平均故障解决时间</strong>，我们通过学习查障手段来保障</p>
+<h1>值班人员职责及流程</h1>
+<h2>职责：</h2>
+<ul>
+<li>
+<p>发现问题</p>
+<ul>
+<li>关注用户主动反馈群--------用户反馈问题</li>
+<li>关注后端技术指标报表波动  -----请求量波动、错误率波动、时延波动</li>
+<li>关注后端日志错误告警群  ------关注程序运行中意想不到的分支</li>
+<li>关注服务组件状态 ----- 线程状态、进程状态、机器负载、CPU、内存、文件IO、网络、数据库负载</li>
+<li>关注业务状态 -----  注册人数、登录人数、订单数量、账本变动数</li>
+</ul>
+</li>
+<li>
+<p>甄别问题优先级</p>
+</li>
+<li>
+<p>在值班记录表(飞书表格)中记录值班期间发生的问题，跟进推进问题解决</p>
+</li>
+<li>
+<p><strong>紧急问题、非紧急2小时没有找到原因的问题，上报上级，做出预警</strong></p>
+</li>
+<li>
+<p>组内站会时，介绍出现问题的调查过程及问题原因，加强监控措施并<strong>优化处理时长</strong></p>
+</li>
+</ul>
+<h2>流程：</h2>
+<ul>
+<li>
+<p>值班人按天进行排班，时间为周一到周日，早上9:30-23:00,周任务安排时，会预留余量，用于处理值班事务</p>
+</li>
+<li>
+<p>根据值班表，值班人当天，在飞书接收各告警群的问题反馈，并且检查线上服务组件状态</p>
+<ul>
+<li>业务反馈群</li>
+<li>技术告警群</li>
+</ul>
+</li>
+<li>
+<p>当收到告警、报障，在飞书上创建问题，生成问题单，跟踪问题进展</p>
+</li>
+<li>
+<p>定位并解决问题、及时反馈业务，对于无法单独处理的问题要及时上报</p>
+</li>
+<li>
+<p>问题解决完成后，在飞书上记录问题单信息，标记解决</p>
+</li>
+</ul>
+<h1>常用查障手段</h1>
+<h2>了解系统对外提供了什么</h2>
+<ul>
+<li>系统承载了哪些业务? 业务A/业务B</li>
+<li>系统由哪些模块组成?  订单/注册</li>
+<li>系统以什么方式对外提供服务？用户设备直接请求？业务后台转发？HTTP 接口？gRPC 接口？MQ？</li>
+</ul>
+<h2>了解系统部署架构</h2>
+<ul>
+<li>系统有多少个进程组成？各个进程的职能是什么</li>
+<li>系统部署的IDC、K8s集群、云日志位置、Trace日志的位置</li>
+<li>系统对外暴露的 Service、路由、域名</li>
+</ul>
+<h2>了解系统依赖了什么</h2>
+<ul>
+<li>
+<p>系统依赖的存储组件有哪一些？以及使用方式和重要级别？</p>
+<ul>
+<li>数据库？数据存储类型？日志？配置？业务数据？</li>
+<li>Redis？作用？分布式锁？业务逻辑依赖？缓存？</li>
+<li>消息队列？生产者和发送时机、消费者和消费逻辑、Topic的重要级别和消息量</li>
+<li>注册中心、配置中心？</li>
+</ul>
+</li>
+<li>
+<p>系统依赖的第三方组件</p>
+<ul>
+<li>第三方组件的功能，重要级别，调用方式，调用频率，重试机制</li>
+</ul>
+</li>
+</ul>
+<h2>了解系统什么情况是正常的</h2>
+<ul>
+<li>从业务流程验证，如每天会下一笔单验证下单流程没问题</li>
+<li>业务数据维度验证，下单量、注册量</li>
+<li>接口请求情况验证，请求量、时延、成功率</li>
+<li>日志维度，查看请求日志正常</li>
+</ul>
+<h2>了解目前系统的问题范围</h2>
+<ul>
+<li>全系统故障</li>
+<li>模块故障</li>
+<li>偶发故障</li>
+<li>某个用户故障</li>
+</ul>
+<h2>问题定位</h2>
+<ul>
+<li>
+<p>全系统故障</p>
+<ol>
+<li>
+<p>最严重故障，需要全员介入，各个维度排查</p>
+</li>
+<li>
+<p>确定是客户端故障，还是服务端故障？</p>
+</li>
+<li>
+<p>域名解析问题？dns故障？证书问题？</p>
+</li>
+<li>
+<p>网络故障？客户端网络故障？服务端机房网络故障？</p>
+</li>
+<li>
+<p>接入层故障？接入ip可达性？接入层Ingress故障？运营商流量黑名单？</p>
+</li>
+<li>
+<p>后端服务部署故障？服务进程崩溃？服务进程负载过高？</p>
+</li>
+<li>
+<p>服务内部逻辑错误？配置错误？数据库连接故障？线程池故障？业务数据错误？</p>
+</li>
+<li>
+<p>内部依赖故障？数据库故障？redis故障</p>
+</li>
+<li>
+<p>第三方依赖故障？</p>
+</li>
+<li>
+<p>后端进程所在机器故障？磁盘？CPU？内存？网络</p>
+</li>
+</ol>
+</li>
+<li>
+<p>模块故障/偶发故障</p>
+<ol>
+<li>
+<p>一般是模块内部错误，可先快速查看模块日志，尝试快速定位</p>
+</li>
+<li>
+<p>如果未能快速定位，则需要寻找规律，按全网故障的排查手段，比较没故障和故障的组件之间的差异，网络不同？数据库不同等，偶发故障需要寻找规律，看出是时间规律还是请求量规律</p>
+</li>
+</ol>
+</li>
+<li>
+<p>某个用户故障</p>
+<ol>
+<li>一般情况下是用户数据异常，导致触发异常分支</li>
+</ol>
+</li>
+</ul>
+<h2>止损</h2>
+<p>止损前提是明确了影响范围和故障模块，已经定位出了故障原因，已经有稳妥的修复方案，并且经过讨论Review，排除掉风险点，考虑了修复，回滚范围后才进行操作，避免以下操作：</p>
+<h2>改进</h2>
+<ul>
+<li>
+<p>健壮性原则：例如，在 B 依赖 A 的状态下，被依赖方 A 出现问题，但是能够快速恢复，而依赖方 B无法快速恢复，导致故障蔓延。这时，承担主要责任的是依赖方 B，而不是被依赖方 A</p>
+</li>
+<li>
+<p>第三方默认无责：这一条是上一条的延伸，如果使用到了第三方的服务，如公有云的各类服务，包括 IaaS、PaaS、CDN 以及视频等等，我们的原则就是默认第三方无责</p>
+</li>
+</ul>
+<p><em>监控：确保发布质量的监控项</em></p>
+<ul>
+<li>
+<p><em>核心质量数据</em></p>
+</li>
+<li>
+<p><em>日志（确保功能跑到并正常）</em></p>
+</li>
+<li>
+<p><em>监控机器人</em></p>
+</li>
+</ul>
+<h2>排查定位大图</h2>
+<h4>系统资源问题定位</h4>
+<p><img src="/img/sre-host-stat.png" alt=""></p>
+<h4>接口响应慢问题定位</h4>
+<p><img src="/img/sre-service-timeout.png" alt=""></p>
+<p> </p>
+<h4>JVM内存溢出问题定位</h4>
+<p><img src="/img/sre-jvm-oom.png" alt=""></p>
+<blockquote>
+<ul>
+<li></li>
+</ul>
+<p><a href="https://blog.51cto.com/wenyule/2977046" target="_blank" rel="external">03 | SRE切入点:选择SLI，设定SLO_Yule的技术博客_51CTO博客</a></p>
+<p>https://sre.google/workbook/how-sre-relates/</p>
+</blockquote>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">SRE</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">故障响应流程</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">故障管理</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2022/07/19/20220719_sre/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-20190501_pieces" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -3277,10 +3560,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">读书笔记</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">Android</a>
               </li>
              
@@ -3297,11 +3576,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Nginx</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Hexo</a>
+                <a href="javascript:void(0)" class="js-tag color5">读书笔记</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -3313,15 +3588,23 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">Cronolog</a>
+                <a href="javascript:void(0)" class="js-tag color5">Hexo</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Tomcat</a>
+                <a href="javascript:void(0)" class="js-tag color4">SRE</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">Log</a>
+                <a href="javascript:void(0)" class="js-tag color2">故障响应流程</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">故障管理</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">Nginx</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -3334,18 +3617,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">gzip</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">SourceTree</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">git svn</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Subversion</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -3369,6 +3640,30 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">Cronolog</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">Tomcat</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">Log</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">SourceTree</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">git svn</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">Subversion</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">Spring</a>
               </li>
              
@@ -3377,11 +3672,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">JVM</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">Linux</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">JVM</a>
+                <a href="javascript:void(0)" class="js-tag color2">log4j2</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -3390,10 +3689,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">Centos</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">log4j2</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -3448,7 +3743,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
     
     	<section class="tools-section tools-section-me" q-show="aboutme">
   	  	
-  	  		<div class="aboutme-wrap" id="js-aboutme">   | 高级八卦工程师 &lt;br&gt;  | 工作是填表格 &lt;br&gt;  | 63 岁程序员 &lt;br&gt;  | 线下社恐,线上话唠 &lt;br&gt;  | 偶尔说说冷笑话 &lt;br&gt;  | 永远相信美好的事情即将发生！</div>
+  	  		<div class="aboutme-wrap" id="js-aboutme">   | 高级八卦工程师 &lt;/br&gt;  | 工作是填表格 &lt;br&gt;  | 63 岁程序员 &lt;br&gt;  | 线下社恐,线上话唠 &lt;br&gt;  | 偶尔说说冷笑话 &lt;br&gt;  | 永远相信美好的事情即将发生！</div>
   	  	
     	</section>
     
