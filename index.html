@@ -271,6 +271,124 @@
 
 
   
+    <article id="post-20221107_microservice_decomposition" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2022/11/07/20221107_microservice_decomposition/">微服务拆分之道</a>
+    </h1>
+  
+
+        
+        <a href="/2022/11/07/20221107_microservice_decomposition/" class="archive-article-date">
+  	<time datetime="2022-11-07T03:33:12.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2022-11-07</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>记一次服务拆分流程,这里只是记录思路,不讨论细节</p>
+<h1>一、拆分理论基础</h1>
+<p><img src="/img/20221107_microservice_decomposition_diagram.png" alt=""></p>
+<h1>二、核心业务流程-服务划分</h1>
+<p><img src="/img/20221107_microservice_decomposition_biz.jpg" alt=""></p>
+<p>问题点：</p>
+<ul>
+<li>如何鉴权：所有服务都集成鉴权 sdk，需要的时候添加注解</li>
+<li>所有服务可以对外提供服务吗？所有服务都可以对外提供接口，提供admin/api/rest/rpc接口</li>
+<li>上课端单独一个上课服务，保证上课链路不受其他模块影响</li>
+<li>admin和api如何隔离
+<ul>
+<li>安全方面用登录态隔离</li>
+<li>可用性要求高的服务通过域名路由到不同部署实例隔离</li>
+</ul>
+</li>
+<li>暂时不要聚合查询服务，页面查询分散到招生和教务模块</li>
+<li>面向渠道/官网/通用配置/落地页不需要单独划分系统，如果请求量高的情况下，对应服务进行横向扩容</li>
+<li>课节状态的维护，由哪个服务负责，课节状态由课程服务维护</li>
+<li>如何合理隔离声网的接口（依赖）</li>
+<li>课堂答题/互动的相关依赖接口，是否需要单独拆分，单独拆分</li>
+<li>跨服务的数据信息填充,究竟在哪里填充?填充逻辑和聚合逻辑在一起,在哪里聚合就在哪里填充</li>
+</ul>
+<h1>三、拆分步骤</h1>
+<ul>
+<li>独立的服务可以单独拆分</li>
+<li>先定好服务边界，同一个进程内，按定好服务划分，把服务调用关系规范起来，把进程间接口定义清楚</li>
+<li>梳理出服务依赖关系，确定服务改造顺序</li>
+<li>制定：战略决心</li>
+</ul>
+<h1>四、部署架构/新旧架构兼容/流量路由</h1>
+<p><img src="/img/20221107_microservice_decomposition_services.jpg" alt=""></p>
+<p>   </p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">总结</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">微服务</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">服务拆分</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">架构</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2022/11/07/20221107_microservice_decomposition/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-20220905_rpc" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -292,10 +410,10 @@
     <div class="article-entry" itemprop="articleBody">
       
         <h1>背景</h1>
-<p>后端团队技术栈为 Go 和 Java
-Go 服务为微服务架构,使用 gRPC 和 gRPC-Gateway 对 APP 和 H5 提供服务
-Java 服务目前没有统一后端协议栈,  HTTP 和 gRPC 混用,没有统一的微服务框架
-现状</p>
+<p>后端团队技术栈为 Go 和 Java<br>
+Go 服务为微服务架构,使用 gRPC 和 gRPC-Gateway 对 APP 和 H5 提供服务<br>
+Java 服务目前没有统一后端协议栈,  HTTP 和 gRPC 混用,没有统一的微服务框架</p>
+<p>现状</p>
 <ul>
 <li>营收/PUSH 中台使用 HTTP 协议，基于 Spring MVC</li>
 <li>支付网关使用 HTTP 协议，基于 Spring Cloud</li>
@@ -3750,10 +3868,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">读书笔记</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">Android</a>
               </li>
              
@@ -3766,7 +3880,35 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">读书笔记</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">总结</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">微服务</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">服务拆分</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">架构</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">SRE</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">故障响应流程</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">故障管理</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -3786,7 +3928,19 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">工程师学习</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">软技能</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">Hexo</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">Nginx</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -3802,27 +3956,27 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">工程师学习</a>
+                <a href="javascript:void(0)" class="js-tag color4">CPU</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">软技能</a>
+                <a href="javascript:void(0)" class="js-tag color5">logrotate</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Nginx</a>
+                <a href="javascript:void(0)" class="js-tag color5">gzip</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">SRE</a>
+                <a href="javascript:void(0)" class="js-tag color1">SourceTree</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">故障响应流程</a>
+                <a href="javascript:void(0)" class="js-tag color3">git svn</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">故障管理</a>
+                <a href="javascript:void(0)" class="js-tag color1">Subversion</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -3846,35 +4000,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">SourceTree</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">git svn</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Subversion</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">Spring</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">Error</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">CPU</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">logrotate</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">gzip</a>
               </li>
              
               <li class="article-tag-list-item">
