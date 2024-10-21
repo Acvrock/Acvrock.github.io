@@ -271,6 +271,196 @@
 
 
   
+    <article id="post-20220905_rpc" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2022/09/05/20220905_rpc/">微服务架构整合-RPC</a>
+    </h1>
+  
+
+        
+        <a href="/2022/09/05/20220905_rpc/" class="archive-article-date">
+  	<time datetime="2022-09-05T04:03:22.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2022-09-05</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1>背景</h1>
+<p>后端团队技术栈为 Go 和 Java
+Go 服务为微服务架构,使用 gRPC 和 gRPC-Gateway 对 APP 和 H5 提供服务
+Java 服务目前没有统一后端协议栈,  HTTP 和 gRPC 混用,没有统一的微服务框架
+现状</p>
+<ul>
+<li>营收/PUSH 中台使用 HTTP 协议，基于 Spring MVC</li>
+<li>支付网关使用 HTTP 协议，基于 Spring Cloud</li>
+<li>UDB 使用 HTTP 协议和 gRPC 协议，基于 Spring MVC 和 gRPC-Java</li>
+</ul>
+<p>存在以下问题：</p>
+<ul>
+<li>开发速度慢, Java 接入 gRPC-Java 方式不友好，目前只用到了 gRPC 的简单模式，却需要写一些模版代码，过于繁琐<code>（ responseObserver.onNext(respData); responseObserver.onCompleted(); ）</code>,另外 gRPC 不支持 BeanCopy,对于服务分层隔离并不友好</li>
+<li>缺少统一异常机制，微服务中的异常无法优雅的传递,目前不同服务间的异常都是通过错误码传递,每次调用都要捕获错误码,再次抛出,不能携带更多信息，语义不友好+繁琐</li>
+<li>服务治理能力差
+<ul>
+<li>缺少负载均衡(目前即使有两个后端进程,也只会连接第一个)</li>
+<li>缺少错误重试/超时机制(只能全局统一 10s 超时,对应一些高频访问接口故障会有坑)</li>
+</ul>
+</li>
+</ul>
+<h1>目标</h1>
+<ol>
+<li>推动 Java 后端统一微服务栈,简化开发模式,加速开发效率</li>
+<li>推动 Java 后端统一协议,支持 gRPC 和 HTTP,支撑目前的跨团队服务调用</li>
+</ol>
+<h2>技术需求</h2>
+<ul>
+<li>
+<p>向 <a href="https://docs.microsoft.com/zh-cn/dotnet/architecture/cloud-native/definition" target="_blank" rel="external">云原生</a> 靠拢,简化运维模型</p>
+<ul>
+<li>基于 Kubernetes 生态,但是避免深度依赖 Kubernetes API，避免依赖厂商特性</li>
+<li>不额外维护注册中心</li>
+<li>不额外维护配置中心</li>
+<li>不额外维护微服务网关</li>
+</ul>
+</li>
+<li>
+<p>兼容现有协议,支持 gRPC / HTTP, Java 和 Go 通讯,避免重构成本</p>
+<ul>
+<li>支持 Protocol Buffers 对旧技术栈/跨团队服务进行兼容</li>
+<li>也需要支持脱离 Protocol Buffers 进行内部调用的快速开发</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li>解决方案足够完整,开发模式足够简单,避免繁琐的模版代码和基础架构封装
+<ul>
+<li><strong>统一异常</strong></li>
+<li><strong>参数校验</strong></li>
+<li>服务发现</li>
+<li>负载均衡</li>
+<li><em>服务降级</em></li>
+<li><em>性能</em></li>
+<li>快速开发</li>
+</ul>
+</li>
+</ul>
+<h2>拆分原则</h2>
+<ol>
+<li>微服务本身具备功能完整性,功能性明确,不需要和其他服务联动</li>
+<li>某一个微服务支持使用的不同的语言开发</li>
+<li>微服务需要有自治性，能独立开发，独立测试，独立部署，独立上线，独立升级</li>
+</ol>
+<h1>候选方案</h1>
+<h2>1. <a href="https://gRPC.io/docs/languages/Java/quickstart/" target="_blank" rel="external">gRPC-Java</a>   原生接入</h2>
+<p>目前 UDB 接入方案</p>
+<p>优点: 可用</p>
+<p>缺点: 繁琐</p>
+<p>性能:
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">1k </div><div class="line"> \- time:60038</div><div class="line"> \- total:208561</div><div class="line"> \- qps:3476</div><div class="line"> \- min:1.0E-6,max:349.7322,avg:1.43</div><div class="line">ping</div><div class="line"> \- time:60017</div><div class="line"> \- total:209707</div><div class="line"> \- qps:3495</div><div class="line"> \- min:1.0E-6,max:324.558199,avg:1.43</div></pre></td></tr></table></figure></p>
+<h2>2. <a href="HTTPs://yidongnan.github.io/gRPC-spring-boot-starter/zh-CN/server/getting-started.html" target="_blank" rel="external">grpc-spring-boot-starter</a>  spring boot 集成接入</h2>
+<p>优点: 配置简单,原生 gRPC 协议</p>
+<p>缺点: 还是 gRPC 写法</p>
+<p>性能:
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">1k </div><div class="line"> \- time:60030</div><div class="line"> \- total:201357</div><div class="line"> \- qps:3355</div><div class="line"> \- min:1.0E-6,max:327.2315,avg:1.4903129657228018</div><div class="line">ping</div><div class="line"> \- time:60027</div><div class="line"> \- total:199932</div><div class="line"> \- qps:3332</div><div class="line"> \- min:1.0E-6,max:357.2604,avg:1.5006002400960383</div></pre></td></tr></table></figure></p>
+<h2>3. <a href="https://dubbo.apache.org/zh/" target="_blank" rel="external">Dubbo</a></h2>
+<p>优点: 有服务治理,简洁</p>
+<p>缺点: 架构复杂,可能有坑</p>
+<p>特点: 兼容 gRPC，简化了 Java 写法</p>
+<p>性能:
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">1k</div><div class="line"> \- time:60046</div><div class="line"> \- total:125980</div><div class="line"> \- qps:2099</div><div class="line"> \- min:1.0E-6,max:379.690099,avg:2.38208670795617</div><div class="line">ping</div><div class="line"> \- time:60053</div><div class="line"> \- total:127530</div><div class="line"> \- qps:2125</div><div class="line"> \- min:1.0E-6,max:354.518599,avg:2.3529411764705883</div></pre></td></tr></table></figure></p>
+<h2>4. <a href="https://github.com/spring-cloud/spring-cloud-kubernetes" target="_blank" rel="external">spring-cloud</a>+<a href="HTTPs://yidongnan.github.io/gRPC-spring-boot-starter/zh-CN/server/getting-started.html" target="_blank" rel="external">gRPC-spring-boot-starter</a></h2>
+<p>// 需要和 K8s 深度绑定,配合 K8s 权限,暂不考虑</p>
+<h2>5. <a href="https://github.com/spring-cloud/spring-cloud-kubernetes" target="_blank" rel="external">spring-cloud-kubernetes</a></h2>
+<p>// 需要和 K8s 深度绑定,配合 K8s 权限,暂不考虑</p>
+<h2></h2>
+<h2>6. Dubbo 定制 jProtobuf</h2>
+<p>优点: 支持 Dubbo 现有功能,实现无 IDL 定义快速开发,服务兼容 gRPC 协议,第三方接入时无需重构</p>
+<p>缺点: 对 pojo 定义有约束,可能有坑,可能翻车</p>
+<p>特点: 使用简单,性能和原生 Dubbo 差不多</p>
+<p>性能:
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">1k</div><div class="line"> \- time:60038</div><div class="line"> \- total:129699</div><div class="line"> \- qps:2161</div><div class="line"> \- min:1.0E-6,max:360.087,avg:2.3137436372049978</div><div class="line">ping</div><div class="line"> \- time:60042</div><div class="line"> \- total:133842</div><div class="line"> \- qps:2230</div><div class="line"> \- min:1.0E-6,max:333.899099,avg:2.2421524663677133</div></pre></td></tr></table></figure></p>
+<h1>定制内容</h1>
+<p>采用 Dubbo 定制 jProtobuf 方案</p>
+<ol>
+<li>Dubbo Triple 协议,直接对 C 端提供 gRPC 接口</li>
+<li>拓展 Triple 协议,集成 jProtobuf ,Java 体系内服务间调用基于 Java 接口方式定义,跨系统调用时基于 IDL</li>
+<li>定制实现 Dubbo DNS 服务发现,使用 K8s Service 作为注册中心,省略额外的注册中心部署</li>
+<li>定制 Dubbo 统一异常,服务间异常传递</li>
+<li>定制 opentelemetry-java-instrumentation，制定上报 Trace</li>
+</ol>
+<blockquote>
+<p>HTTPs://learnku.com/articles/60779</p>
+</blockquote>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">RPC</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">Dubbo</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">Spring Cloud</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">gRPC</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2022/09/05/20220905_rpc/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-20220719_sre" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -3560,6 +3750,10 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">读书笔记</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">Android</a>
               </li>
              
@@ -3576,7 +3770,35 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">读书笔记</a>
+                <a href="javascript:void(0)" class="js-tag color4">RPC</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">Dubbo</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">Spring Cloud</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">gRPC</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">Hexo</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">Cronolog</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">Tomcat</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">Log</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -3588,7 +3810,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Hexo</a>
+                <a href="javascript:void(0)" class="js-tag color1">Nginx</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -3601,22 +3823,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">故障管理</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Nginx</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">CPU</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">logrotate</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">gzip</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -3640,18 +3846,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">Cronolog</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Tomcat</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">Log</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">SourceTree</a>
               </li>
              
@@ -3672,7 +3866,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">JVM</a>
+                <a href="javascript:void(0)" class="js-tag color4">CPU</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">logrotate</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">gzip</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -3680,7 +3882,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">log4j2</a>
+                <a href="javascript:void(0)" class="js-tag color4">JVM</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -3689,6 +3891,10 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">Centos</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">log4j2</a>
               </li>
              
               <li class="article-tag-list-item">
