@@ -142,6 +142,167 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-20231201_microservice_decomposition_2024_new_season" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2023/12/01/20231201_microservice_decomposition_2024_new_season/">微服务拆分之道-2024新赛季</a>
+    </h1>
+  
+
+        
+        <a href="/2023/12/01/20231201_microservice_decomposition_2024_new_season/" class="archive-article-date">
+  	<time datetime="2023-12-01T02:43:13.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2023-12-01</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>记一次服务拆分的复盘流程,也只记录思路，不详细分析</p>
+<h1>抛出问题</h1>
+<ol>
+<li>顶层的业务服务之间依赖严重,互相依赖,需要重新分层</li>
+<li>统计需求在线服务做</li>
+<li>管理接口/C端接口没拆分</li>
+<li>如何明确核心服务</li>
+<li>如何明确核心业务链路</li>
+<li>如何明确服务的边界</li>
+<li>核心链路如何保障</li>
+<li>每个服务的未来方向</li>
+</ol>
+<h1>架构优化方向</h1>
+<ol>
+<li>循环依赖（应用分层）</li>
+<li>减少调用链路深度（调用层级）</li>
+<li>提高数据复用性（缓存）</li>
+<li>流量治理（减低流量水位，在线、离线隔离）
+<ol>
+<li>消除重复调用</li>
+<li>合并小接口，消除峰值调用</li>
+<li>隔离在线系统、job、sop、管理后台系统</li>
+</ol>
+</li>
+</ol>
+<p>说到 服务之间依赖严重,互相依赖<br>
+每个人都会说：说明你的服务边界没有想清楚<br>
+但是,如何找到系统合适的边界，却没有一个好方法，或好的解决方案<br>
+如何划分我们的服务</p>
+<h3>循环依赖原因</h3>
+<ol>
+<li>数据过度冗余</li>
+<li>缺失业务概念</li>
+<li>滥用同步调用</li>
+</ol>
+<h3>如何解决循环依赖？</h3>
+<ul>
+<li>
+<p>定义出上下游服务，下游可以依赖上游，不能反过来依赖</p>
+<ol>
+<li>下游需要了解上游的领域知识实现业务,<strong>上游服务不受下游服务的业务能力和可用性影响，反之则相反</strong></li>
+<li>衡量耦合级别
+<ul>
+<li><strong>Level4</strong>: 领域知识互为上下游，业务可用性互为上下游</li>
+<li><strong>Level3</strong>: 领域知识互为上下游, 业务可用性为单向上下游</li>
+<li><strong>Level2</strong>: 领域知识为单向上下游，业务可用性互为上下游</li>
+<li><strong>Level1</strong>: 领域知识为单向上下游，业务可用性为单向上下游</li>
+</ul>
+</li>
+</ol>
+</li>
+<li>
+<p>上游服务的变更需要对下游服务产生影响时，通过事件的方式来实现（异步消息、回调）</p>
+</li>
+<li>
+<p>服务间只通过数据id进行关联，不做过多数据冗余</p>
+</li>
+<li>
+<p>一旦出现上游服务需要感知下游服务的执行情况时，考虑清楚上游服务是否缺少业务概念</p>
+</li>
+<li>
+<p>满足前端逻辑的服务间交互逻辑放到 BFF 中，而不是新增服务间调用</p>
+</li>
+</ul>
+<h1>结论</h1>
+<p><img src="/img/20231201_microservice_decomposition_diagram.png" alt=""></p>
+<p>架构设计</p>
+<ul>
+<li>让我们的组件划分尽量靠近变化的原点，对于互联网来说就是用户和业务，这样的划分能够让我们将变化“隔离”在一定的范围（组件）内，从而帮助我们有效减少改变点。</li>
+<li>组件之间能够互相调用，但彼此之间不应该有强依赖，即各自完成的业务是相对独立的，不会因为一方掉线而牵连另外一方，比如新闻网站挂掉了，聊天网站应该继续正常提供服务，可能提示用户暂时无法提供新闻信息而已。</li>
+<li>组件在业务上是鼓励复用的，正是这样的复用才成就了今天的互联网，我们不会每个网站都去实现一个强大的搜索引擎。而被“复用”最多的网站显然会受到追捧，成为明星业务。当然架构上这样的网站必然是健壮的。</li>
+</ul>
+<p><a href="https://mp.weixin.qq.com/s/AAdGpdfB5bc9jucK3K8BbA" target="_blank" rel="external">一文读懂DDD</a></p>
+<p>https://insights.thoughtworks.cn/microservices-bad-smell-circular-dependency/</p>
+<p>https://insights.thoughtworks.cn/how-to-use-upstream-downstream-thinking-to-system-decoupling/</p>
+<p>https://insights.thoughtworks.cn/ddd-architecture-design/</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">总结</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">微服务</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">服务拆分</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">架构</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2023/12/01/20231201_microservice_decomposition_2024_new_season/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-20230809_productivity" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -3868,6 +4029,10 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">读书笔记</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">Android</a>
               </li>
              
@@ -3880,23 +4045,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">读书笔记</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">总结</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">微服务</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">服务拆分</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">架构</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -3909,6 +4058,18 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">故障管理</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">微服务</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">服务拆分</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">架构</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -3928,15 +4089,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">Hexo</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">工程师学习</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">软技能</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Hexo</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -3956,18 +4117,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">CPU</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">logrotate</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">gzip</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">SourceTree</a>
               </li>
              
@@ -3977,6 +4126,18 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">Subversion</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">CPU</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">logrotate</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">gzip</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -4016,6 +4177,10 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">Shell</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">Redis</a>
               </li>
              
@@ -4025,10 +4190,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">log4j2</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Shell</a>
               </li>
             
             <div class="clearfix"></div>
