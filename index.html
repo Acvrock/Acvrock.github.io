@@ -1023,6 +1023,138 @@ Java 服务目前没有统一后端协议栈,  HTTP 和 gRPC 混用,没有统一
 
 
   
+    <article id="post-20210926_SimpleExceptionLayering" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2021/09/26/20210926_SimpleExceptionLayering/">一个简单的异常层次</a>
+    </h1>
+  
+
+        
+        <a href="/2021/09/26/20210926_SimpleExceptionLayering/" class="archive-article-date">
+  	<time datetime="2021-09-26T12:14:52.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-09-26</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>异常的定义主要考虑以下几个方面</p>
+<ol>
+<li>通过异常,能快速知道是哪一个部分出现问题</li>
+<li>通过异常,能快速知道,异常的严重程度</li>
+<li>通过异常,能快速知道应该怎么处理,谁来处理</li>
+<li>异常要和下游系统联动,和监控告警系统联动起来</li>
+</ol>
+<p><img src="/img/ResourceException.png" alt=""></p>
+<h5>BizException</h5>
+<p>作用:统一捕获</p>
+<h5>NoCheckException:</h5>
+<p>定义: 用户输入异常.</p>
+<p>用户有可能会从这种分支进来,但是不能得到预期结果</p>
+<ul>
+<li>用户输错密码.</li>
+<li>用户填错信息.</li>
+<li>用户没填信息.</li>
+</ul>
+<p>处理:</p>
+<ul>
+<li>前端:提示友好错误提示,由用户自行处理.</li>
+<li>告警:不需要告警.</li>
+<li>运维:无需介入,只需要记录,用于后续统计,如登陆成功率,输入错误率.</li>
+</ul>
+<h5>BusinessException</h5>
+<p>定义: 业务异常.</p>
+<p>业务上的校验/处理异常,用户处理不了的情况,如:</p>
+<ul>
+<li>appid 等联调参数为空,用户处理不了</li>
+<li>前端bug导致入参错误</li>
+<li>配置错误</li>
+</ul>
+<p>处理:</p>
+<ul>
+<li>前端:提示参数错误,这个错误需要app/前端/运营/产品处理</li>
+<li>告警:需要需要告警</li>
+<li>运维:并且需要联系对接人修复处理</li>
+</ul>
+<h5>ResourceException</h5>
+<p>定义: 依赖资源异常</p>
+<ul>
+<li>第三方服务请求相关异常.</li>
+<li>第三方服务网络不通.</li>
+<li>第三方服务远程调用超时.</li>
+</ul>
+<p>处理:</p>
+<ul>
+<li>前端:提示系统错误,这个错误需要后端处理.</li>
+<li>告警:需要紧急告警.</li>
+<li>运维:需要立即修复.</li>
+</ul>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Exception</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">异常</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">Error</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2021/09/26/20210926_SimpleExceptionLayering/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-20190501_pieces" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -2717,15 +2849,15 @@ Sign Your Work</p>
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">Error</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
         			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Java</a>
         		</li>
       		 
         		<li class="article-tag-list-item">
         			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Spring</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">Error</a>
         		</li>
       		
 		</ul>
@@ -4029,15 +4161,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">读书笔记</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">Android</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Exception</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -4045,7 +4169,23 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">Exception</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">读书笔记</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">总结</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">异常</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">Error</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -4073,6 +4213,10 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">Hexo</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">RPC</a>
               </li>
              
@@ -4086,10 +4230,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">gRPC</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Hexo</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -4129,18 +4269,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">CPU</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">logrotate</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">gzip</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">Method.getAnnotations()</a>
               </li>
              
@@ -4165,7 +4293,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Error</a>
+                <a href="javascript:void(0)" class="js-tag color4">CPU</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">logrotate</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">gzip</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -4177,7 +4313,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Shell</a>
+                <a href="javascript:void(0)" class="js-tag color2">log4j2</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -4189,7 +4325,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">log4j2</a>
+                <a href="javascript:void(0)" class="js-tag color1">Shell</a>
               </li>
             
             <div class="clearfix"></div>
