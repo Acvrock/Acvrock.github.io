@@ -349,6 +349,126 @@ stat 则是统计相关，并且负责事件的持久化<br>
 
 
   
+    <article id="post-20240112_optimize_api" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2024/01/12/20240112_optimize_api/">记录一次接口优化过程</a>
+    </h1>
+  
+
+        
+        <a href="/2024/01/12/20240112_optimize_api/" class="archive-article-date">
+  	<time datetime="2024-01-12T14:38:07.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2024-01-12</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>记录线上一次慢接口的优化过程<br>
+优化前 Trace 情况:可以看到耗时部分是在 RPC 接口查询之后产生的</p>
+<p><img src="/img/optimize_api/image.png" alt=""></p>
+<p>原代码:</p>
+<p><img src="/img/optimize_api/image-8.png" alt=""></p>
+<p>怀疑 BeanCopy 工具有问题,调整代码,去除 BeanCopy:</p>
+<p><img src="/img/optimize_api/image-6.png" alt=""></p>
+<p>优化后 Trace 情况:</p>
+<p><img src="/img/optimize_api/img_v3_0278_b03a91f6-79f1-4632-b501-c252c2e2112g.jpg" alt=""></p>
+<h3>优化分析</h3>
+<h5>初步猜测</h5>
+<ul>
+<li>
+<p>重载方法的推导 (对于proto的兼容,如enum和date,我们会新增额外的重载方法,简化代码)</p>
+</li>
+<li>
+<p>入参不同类型的推导(此次结构定义,有一些对象Vo是long,proto是int)</p>
+</li>
+<li>
+<p>缺少参数的查找(此次结构定义,存在参数不对应的情况)</p>
+</li>
+</ul>
+<h3>验证</h3>
+<h5>验证代码</h5>
+<p><img src="/img/optimize_api/image-7.png" alt=""></p>
+<p>运行结果</p>
+<p>new time:3</p>
+<p>old time:48701</p>
+<p><img src="/img/optimize_api/image-1.png" alt=""></p>
+<p>主要时间在预热和旧代码</p>
+<p><img src="/img/optimize_api/image-2.png" alt=""></p>
+<p>Hutool 循环 loadClass</p>
+<p><img src="/img/optimize_api/image-3.png" alt=""></p>
+<p>问题代码:</p>
+<p><img src="/img/optimize_api/image-4.png" alt=""></p>
+<p>新代码已经修复</p>
+<p>https://github.com/dromara/hutool/commit/200c098b293d5af4a350d11d5f97b9d2c2bdabfc</p>
+<h3>升级 Hutool版本,调整后效果</h3>
+<p>new time:7</p>
+<p>old time:373</p>
+<p><img src="/img/optimize_api/image-5.png" alt=""></p>
+<p>最大时间为for循环拷贝</p>
+<p><img src="/img/optimize_api/image-9.png" alt=""></p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Java</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">异常</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2024/01/12/20240112_optimize_api/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-20231201_microservice_decomposition_2024_new_season" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -610,6 +730,110 @@ stat 则是统计相关，并且负责事件的持久化<br>
       
         <p class="article-more-link">
           <a class="article-more-a" href="/2023/08/09/20230809_productivity/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-20230428_oom" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2023/04/28/20230428_oom/">记录一次 Java 程序异常重启排查过程</a>
+    </h1>
+  
+
+        
+        <a href="/2023/04/28/20230428_oom/" class="archive-article-date">
+  	<time datetime="2023-04-27T20:11:04.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2023-04-28</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>压测过程中,程序内存溢出并重启,原因排查<br>
+首先排查进程运行情况,因为进程所在 Pod 已经重启<br>
+通过 K8s Pod 监控可以看到服务在 12：40 后，CPU 飙升, CPU 飙升往往是持续 GC 导致的</p>
+<p><img src="/img/oom/img_v2_da5cd96f-7139-46c4-bfe4-f6ef57c02cag.jpg" alt=""></p>
+<p>下一步排查数据库情况,虽然数据库 CPU 存在 100% 情况，但是只是一瞬间，没有持续，说明瓶颈是在应用程序，压力没有持续传导到数据库，应用程序本身已经崩溃了</p>
+<p><img src="/img/oom/img_v2_f19a349b-36cc-4eae-af2a-8675b0e7186g.jpg" alt="">
+细看数据库引擎情况,分析 CPU 100% 原因,发现没有慢 SQL 等其他异常, 更新和扫描行数也正常,通过 TPS 分析发现 SQL 执行次数飙升</p>
+<p><img src="/img/oom/img_v2_3583a8c4-0b0c-4b45-bf7c-d6a0e442493g.jpg" alt=""></p>
+<p>下一步是排查应用程序本身的 Trace 情况,通过 Trace 只能分析到程序运行的表象,即:请求量暴增后,进程无响应,日志/Trace 等无法上报,并且被 K8s 驱逐</p>
+<p><img src="/img/oom/image-2.png" alt=""></p>
+<p>因为我们的 gc 日志和应用日志都会实时采集到阿里云日志平台,所以直接查询服务 gc 日志进行分析，显示此时存在非常高频的 GC，导致CPU持续100%</p>
+<p><img src="/img/oom/image-1.png" alt=""></p>
+<p>把 GC 日志通过 gceasy 进行分析,提示严重的 GC 问题,但是,此时我们只是明确了程序 CPU 高的原因,还不能排查出为什么程序 GC 由什么原因引起</p>
+<p><a href="img/BrilliantGCGraphsMetricsAndKPIs.pdf">Brilliant GC graphs, metrics and KPIs.pdf</a></p>
+<p>截取故障前后的应用日志，可看到 GC 频繁，和接口请求情况，其中 Total 3k 的日志嫌疑最大</p>
+<p><img src="/img/oom/img_3.png" alt=""></p>
+<p>排查到此，已经锁定了嫌疑的业务逻辑,但是还是没办法实锤,可能会导致优化方向错误<br>
+我们 JVM 配置了内存溢出时 dump 堆栈信息,并且外挂目录 Volumes 可用,从中找到了故障时的 dump 文件, 下载 dump 文件进行分析</p>
+<p><img src="/img/oom/image.png" alt=""></p>
+<p>锁定了明确的内存溢出对象</p>
+<p>主因有两个,两个接口没实现缓存和其他优化,在大并发情况下占用内存过多,通过调整实现和层层缓存的方式解决</p>
+<p>2023-04-27 12:38:56,780 INFO [4d7081320642116bc8a08b4ebeec8ea6 9b0b4f9a7a2ee351 01] [rtri-protocol-12390-thread-188] c.r.h.d.f.ProviderTraceFilter:48 - [] enter provide,ApiClassLessonStatService.listByClassLessonIdsAndUids|called:10.133.208.76:53836|params:[[8136,8137,8358,8359,8382],[2013000081453,2013000085861,2013000085863,800个元素...]]</p>
+<p>2023-04-27 12:39:02,177 INFO [665479416c6231df15caa14e73b19296 ab8926e54d10690f 01] [rtri-protocol-12390-thread-288] c.r.h.d.f.ProviderTraceFilter:48 - [] enter provide,ApiClassLessonEventService.list|called:10.133.208.54:55352|params:[8383,null,[&quot;stu_connect&quot;]]</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">故障管理</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Java</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">JVM</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2023/04/28/20230428_oom/">展开全文 >></a>
         </p>
       
 
@@ -1726,6 +1950,10 @@ javac 实现了在编译时，拷贝方法和参数上的注解到桥方法上�
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Java</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
         			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">Method.getAnnotations()</a>
         		</li>
       		 
@@ -1739,10 +1967,6 @@ javac 实现了在编译时，拷贝方法和参数上的注解到桥方法上�
       		 
         		<li class="article-tag-list-item">
         			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">Guava</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Java</a>
         		</li>
       		
 		</ul>
@@ -3241,11 +3465,11 @@ Sign Your Work</p>
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">Error</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Java</a>
         		</li>
       		 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Java</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">Error</a>
         		</li>
       		 
         		<li class="article-tag-list-item">
@@ -4561,15 +4785,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">读书笔记</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">总结</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">checkbox padding兼容</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">读书笔记</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -4585,11 +4809,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">异常</a>
+                <a href="javascript:void(0)" class="js-tag color4">微服务</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Error</a>
+                <a href="javascript:void(0)" class="js-tag color5">服务拆分</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">架构</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -4609,15 +4837,19 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">微服务</a>
+                <a href="javascript:void(0)" class="js-tag color5">Java</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">服务拆分</a>
+                <a href="javascript:void(0)" class="js-tag color4">JVM</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">架构</a>
+                <a href="javascript:void(0)" class="js-tag color3">异常</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">Error</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -4626,10 +4858,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">软技能</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Hexo</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -4649,18 +4877,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">SourceTree</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">git svn</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Subversion</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">Method.getAnnotations()</a>
               </li>
              
@@ -4677,7 +4893,19 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Java</a>
+                <a href="javascript:void(0)" class="js-tag color5">Hexo</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">SourceTree</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">git svn</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">Subversion</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -4706,10 +4934,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">Linux</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">JVM</a>
               </li>
              
               <li class="article-tag-list-item">
